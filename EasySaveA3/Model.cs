@@ -1,23 +1,27 @@
 ﻿using System;
 
 
-namespace EasySave
-{
+namespace EasySave { 
+
 	public class Model
 	{
 		public string SrcDir { get; set; }
 		public string DestDir { get; set; }
-		public string SaveName { get; set; }
-		public int SaveType { get; set; }
-		public string stateFile;
-		public string logFile;
+		public string BackupName { get; set; }
+		public int BackupType { get; set; }
+        public bool AllowedBackup { get; set; }	
+		public BackupList list { get; set; }
+
+		private string stateFile;
+		private string logFile;
+
 
 		public Model()
 		{
-
+			list = new BackupList();
 		}
 
-		public bool SaveFile()
+		public bool BackupFile()
         {
 			return true;
         }
@@ -29,8 +33,25 @@ namespace EasySave
 
 		public void LogFile()
 		{
-			
+
 		}
+
+		public void Fullbackup()
+		{
+
+		}
+
+		public void DifferentialBackup()
+		{
+
+		}
+
+		public void AllowBackup()
+		{
+
+		}
+
+
 
 
 	}
