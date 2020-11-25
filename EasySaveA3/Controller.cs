@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace EasySave
 {
     class Controller
     {
+        //attributes for controller 
         private Model model;
         private View view;
         public string srcDir;
@@ -19,37 +21,62 @@ namespace EasySave
             AppStart();
         }
 
-        public void AppStart()
+        //starts the program, this method is called in Main(string[] args)
+        private void AppStart()
         {
             bool stop = false;
             int choice;
             do
             {
-                view.Start(model.list.index);
+                BackupDirectory.BackupsList = model.LoadList();
+                view.Start(model.backupCount, 5);
                 choice = UserChoice();
-                //verif model.list.Length < 5 (créer une liste dans le model (json.deserialize ?))
 
-                if (choice == 1 && model.list.index < 5)
+                if (choice == 1 && model.AllowedBackup) // create a backup using this option
                 {
+                    view.BackupType();
+                    model.BackupType = GetBackupType();
+
                     view.SrcDir();
                     model.SrcDir = GetSrcDir();
+
                     view.DestDir();
                     model.DestDir = GetDestDir();
 
+                    view.GetBackupName();
+                    model.BackupName = GetBackupName();
+
+                    view.Confirm(model.SrcDir, model.DestDir, model.BackupName);
+                    this.Confirm();
+
+                    BackupDirectory.CreateBackup(new DirectoryInfo(model.SrcDir), new DirectoryInfo(model.DestDir), model.BackupName, model.BackupType);
+
                 }
-                else if (choice == 1 && model.list.index >= 5)
-                    Console.WriteLine("\nYou have reached maximum quantity of different backups");
+
+                else if (choice == 1 && model.backupCount >= 5) // can't create more backups
+                    Console.WriteLine("\nYou have reached maximum quantity of different backups (" 
+                        + 5 + ")");
+
+                else if (choice == 2) // use a backup work
+                {
+                    view.BackupType();
+                    model.BackupType = GetBackupType();
+
+                    BackupDirectory.ExistingBackup(model.BackupType);
+                }
+
 
                 stop = AppEnd();
 
             } while (!stop);
 
+            view.Leave();
             Console.ReadKey();
             Environment.Exit(1); // ONLY FOR CONSOLE APP
                                  // USE : (System.) Windows.Forms.Application.Exit(); FOR WINFORM
-
         }
 
+        //returns the choice of the user (use or create backup)
         public int UserChoice() 
         {
             int opt;
@@ -66,7 +93,7 @@ namespace EasySave
                     }
                     else
                     {
-                        Console.WriteLine("You wrote something wrong");
+                        Console.WriteLine("\nYou wrote something wrong");
                         isAllowed = false;
                     }
 
@@ -77,6 +104,7 @@ namespace EasySave
 
         }
 
+        //returns boolean that confirm or not when user is leaving the program
         public bool AppEnd()
         {
 
@@ -85,7 +113,7 @@ namespace EasySave
 
             do
             {
-                Console.WriteLine("Do you want to continue ? " +
+                Console.WriteLine("\nDo you want to continue ? " +
                     "\n\t Y - Yes" +
                     "\n\t N - No");
                 string input = Console.ReadLine();
@@ -98,10 +126,11 @@ namespace EasySave
                         isCorrect = true;
                         break;
                     case "N":
-                        view.Leave();
+                        end = true;
+                        isCorrect = true;
                         break;
                     default:
-                        Console.WriteLine("You wrote something wrong");
+                        Console.WriteLine("\nYou wrote something wrong");
                         end = false;
                         break;
                    
@@ -110,11 +139,43 @@ namespace EasySave
 
             return end;
         }
-
-        public bool CheckDirExistence()
+       
+        //Confirmation for source, destination and backup name by the user
+        public bool Confirm()
         {
-            return true;
+         
+            bool end, isCorrect = false;
+
+            do
+            {
+                Console.WriteLine("\nDo you confirm ? Y/N");
+                string input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "Y":
+                        
+                        end = false;
+                        isCorrect = true;
+                        break;
+                    case "N":
+                        end = true;
+                        isCorrect = true;
+                        break;
+                    default:
+                        Console.WriteLine("\nYou wrote something wrong");
+                        end = false;
+                        break;
+
+                }
+            } while (!isCorrect);
+
+            Console.Clear();
+            return end;
+
         }
+
+        // Basic getters
 
         private string GetSrcDir()
         {
@@ -128,10 +189,14 @@ namespace EasySave
             return dir;
         }
 
-        private int GetSaveType()
+        private int GetBackupType()
         {
             string type = Console.ReadLine();
             int.TryParse(type, out int nb);
+                
+            if (nb != 1 && nb != 2)
+                nb = GetBackupType();
+
             return nb;
         }
 
@@ -141,6 +206,6 @@ namespace EasySave
             return name;
         }
 
-
+ 
     }
 }

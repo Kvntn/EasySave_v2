@@ -4,6 +4,7 @@ namespace EasySave
 {
     class Program
     {
+        //Starts main program
         static void Main(string[] args)
         {
             Model model = new Model();
