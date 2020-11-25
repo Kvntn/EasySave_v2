@@ -115,14 +115,14 @@ namespace EasySave
             }
         }
 
-        
+
         public static void ExistingBackup(int BackupTypeInt)    // used to launch the Backups
         {
-/*          string createdBackups = "./CreatedBackups";
-            File.AppendAllText(createdBackups, ""); // generate a json file if not found
+            /*          string createdBackups = "./CreatedBackups";
+                        File.AppendAllText(createdBackups, ""); // generate a json file if not found
 
-            string json = File.ReadAllText(createdBackups); // read text from json file
-            BackupsList = JsonConvert.DeserializeObject<List<Newbackup>>(json);*/
+                        string json = File.ReadAllText(createdBackups); // read text from json file
+                        BackupsList = JsonConvert.DeserializeObject<List<Newbackup>>(json);*/
 
             switch (BackupTypeInt)
             {
@@ -272,7 +272,7 @@ namespace EasySave
                 Console.WriteLine(Backups.Name);    // Display by only their names not the full path
             }
         }
-        
+
 
         public static void FileSize(string source)
         {
@@ -412,10 +412,10 @@ namespace EasySave
             // logs for executed backups
 
             string logfilepath = @"..\..\..\..\ExecutedBackups.json";
-         
+
             if (!File.Exists(logfilepath))
                 File.Create(logfilepath);
-            
+
             StreamReader sr = new StreamReader(logfilepath);
             dynamic json = sr.ReadToEnd();
             List<Logs> saveData = JsonConvert.DeserializeObject<List<Logs>>(json);
@@ -434,7 +434,7 @@ namespace EasySave
             });
 
             json = JsonConvert.SerializeObject(saveData.ToArray(), Formatting.Indented); //Formatting.Indented is used for a pretty json file
-                                                                                                // Write string to file in json format
+                                                                                         // Write string to file in json format
             File.AppendAllText(logfilepath, json); // call parent target folder to save json
                                                    // appendAllText to add string instead of replace
 
@@ -456,7 +456,7 @@ namespace EasySave
             sr.Close();
 
             File.WriteAllText(BackupsFile, string.Empty);
-            
+
             saveData.Add(new Newbackup()
             {
                 taskname = taskname,
@@ -647,6 +647,6 @@ namespace EasySave
             Console.Write(filesNBcount.ToString() + " of " + totalFolderFiles.ToString() + "    "); //blanks at the end remove any excess
         }*/
 
-       
+
     }
 }
