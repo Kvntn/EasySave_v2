@@ -2,7 +2,7 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace EasySave
+namespace EasySave_liv2.Model
 {
     public class StateFile
     {
