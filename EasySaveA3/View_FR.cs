@@ -5,17 +5,16 @@ using System.Windows;
 
 namespace EasySave
 {
-    public class View
+    public class View_FR
     {
-
-        public View()
+        public View_FR()
         {
 
         }
 
         //Shows when the app starts
         public void Start(int nbBackup, int maxBackup)
-        {   
+        {
             Console.WriteLine("\n   $$$$$$$$\\                               $$$$$$\\                                          "
                             + "\n   $$  _____ |                            $$  __$$\\                                          "
                             + "\n   $$ |      $$$$$$\\   $$$$$$$\\ $$\\   $$\\ $$ /  \\__ | $$$$$$\\ $$\\    $$\\  $$$$$$\\    "
@@ -29,16 +28,16 @@ namespace EasySave
                             + "\n                                   \\______/                                                  "
                             );
             Menu(nbBackup, maxBackup);
-            
+
         }
 
         //Follows Start() method
         public void Menu(int nbBackup, int maxBackup)
         {
             Console.WriteLine("\n\n=====================================================================" +
-                "\n\n Choose among the following options :" +
-                "\n\t 1 - Create a backup work (" + nbBackup + "/"+ maxBackup +")" +
-                "\n\t 2 - Use an existing backup"
+                "\n\n Choisissez parmis les options suivantes :" +
+                "\n\t 1 - Creer un travail de sauvegarde (" + nbBackup + "/" + maxBackup + ")" +
+                "\n\t 2 - Utiliser une sauvegarde existante"
                 );
 
         }
@@ -50,13 +49,13 @@ namespace EasySave
         //Source directory
         public void SrcDir()
         {
-            Console.WriteLine("\nDrag and drop the source directory for the backup :");
+            Console.WriteLine("\nGlissez-déposez le dossier source de la sauvegarde :");
         }
 
         //Destination directory
         public void DestDir()
         {
-            Console.WriteLine("\nDrag and drop the destination directory for the backup :");
+            Console.WriteLine("\nnGlissez-déposez le dossier destinataire de la sauvegarde :");
         }
 
         //When an error pops up
@@ -68,30 +67,30 @@ namespace EasySave
         //When user selects what type of save he wants
         public void BackupType()
         {
-            Console.WriteLine("\nChoose your backup type :" +
-                "\n\t 1 - Full backup" +
-                "\n\t 2 - Differential backup");
+            Console.WriteLine("\nChoisissez votre type de sauvegarde :" +
+                "\n\t 1 - Sauvegarde complete" +
+                "\n\t 2 - Sauvegarde differentielle");
         }
 
         //The name for users' backup work
         public void GetBackupName()
         {
-            Console.WriteLine("\nEnter backup name : ");
+            Console.WriteLine("\nEntrez un nom pour la sauvegarde : ");
 
         }
 
         //Backup info check
         public void Confirm(string src, string dst, string name)
         {
-            Console.WriteLine("\n" + src + " will be saved in : " + dst
-                + " as " + name);
+            Console.WriteLine("\n" + src + " sera sauvegarde dans : " + dst
+                + " en tant que " + name);
         }
 
         //When user is leaving
         public void Leave()
         {
-            Console.WriteLine("\n\nThanks for using our software. See you next time." +
-                "\n\nType any key to end the program.");
+            Console.WriteLine("\n\nMerci d'avoir utilisé notre logiciel, au revoir" +
+                "\n\nPressez une touche pour quitter.");
 
         }
 

@@ -9,13 +9,20 @@ namespace EasySave
     {
         //attributes for controller 
         private Model model;
-        private View view;
-        public string srcDir;
-        public string destDir;
-        private string BackupName;
+        private dynamic view;
+
+        private bool FR = false;
 
         public Controller(Model modelx, View viewx)
         {
+            model = modelx;
+            view = viewx;
+            AppStart();
+        }
+
+        public Controller(Model modelx, View_FR viewx)
+        {
+            FR = true;
             model = modelx;
             view = viewx;
             AppStart();
@@ -54,8 +61,12 @@ namespace EasySave
                 }
 
                 else if (choice == 1 && model.backupCount >= 5) // can't create more backups
-                    Console.WriteLine("\nYou have reached maximum quantity of different backups (" 
-                        + 5 + ")");
+                    if (FR)
+                        Console.WriteLine("\nVous avez atteint le nombre limite de sauvegardes (" 
+                            + 5 + ")");
+                    else
+                        Console.WriteLine("\nYou have reached maximum quantity of different backups ("
+                            + 5 + ")");
 
                 else if (choice == 2) // use a backup work
                 {
@@ -93,7 +104,10 @@ namespace EasySave
                     }
                     else
                     {
-                        Console.WriteLine("\nYou wrote something wrong");
+                        if (FR)
+                            Console.WriteLine("\nVous avez mal ecris.");
+                        else
+                            Console.WriteLine("\nYou wrote something wrong.");
                         isAllowed = false;
                     }
 
@@ -113,9 +127,15 @@ namespace EasySave
 
             do
             {
-                Console.WriteLine("\nDo you want to continue ? " +
+                if (FR)
+                    Console.WriteLine("\nVoulez-vous continuer ? " +
+                    "\n\t Y - Oui" +
+                    "\n\t N - Non");
+                else
+                    Console.WriteLine("\nDo you want to continue ? " +
                     "\n\t Y - Yes" +
                     "\n\t N - No");
+
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -130,7 +150,10 @@ namespace EasySave
                         isCorrect = true;
                         break;
                     default:
-                        Console.WriteLine("\nYou wrote something wrong");
+                        if (FR)
+                            Console.WriteLine("\nVous avez mal ecris.");
+                        else
+                            Console.WriteLine("\nYou wrote something wrong.");
                         end = false;
                         break;
                    
@@ -148,7 +171,10 @@ namespace EasySave
 
             do
             {
-                Console.WriteLine("\nDo you confirm ? Y/N");
+                if (FR)
+                    Console.WriteLine("\nVous confirmez ?");
+                else
+                    Console.WriteLine("\nDo you confirm ?");
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -163,7 +189,10 @@ namespace EasySave
                         isCorrect = true;
                         break;
                     default:
-                        Console.WriteLine("\nYou wrote something wrong");
+                        if (FR)
+                            Console.WriteLine("\nVous avez mal ecris.");
+                        else
+                            Console.WriteLine("\nYou wrote something wrong.");
                         end = false;
                         break;
 
