@@ -28,25 +28,45 @@ namespace EasySave_liv2.Model
         public static int jsonLength;*/
 
         // list for extensions that need encryption
-        public List<string> EncryptExt = new List<string>();
+        public List<string> EncryptExt;
+
+        // list of programs that prevent from closing
+        public List<string> ProgramPreventClose;
 
         //detailed backup list
         public int backupCount = 0;
         public List<ConfigFile> LoadedConfig { get; set; }
         public List<Newbackup> BackupsList { get; set; }
         public List<Newbackup> SelectedBackups { get; set; }
+        private ConfigFile Config { get; set; }
 
+        //--- ALL PATHS OF RELATED JSON FILES
         private readonly static string documentStorage = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\EasySave\";
         private readonly static string jsonList = documentStorage + @"\CreatedBackups.json";
         private readonly static string logfilepath = documentStorage + @"\ExecutedBackups.json";
         private readonly static string configFile = documentStorage + @"\config.json";
 
-        // check background app to pursue process
-        //public static bool pursue;
 
         public Backup()
         {
             BackupsList = LoadList();
+            
+            CheckConfigRequirements();
+        }
+
+        //Loads config file to allow modifications.
+        private ConfigFile ReadConfigJson()
+        {
+            if (!File.Exists(configFile))
+                File.Create(configFile);
+
+            StreamReader sr = new StreamReader(configFile);
+
+            var json = sr.ReadToEnd();
+            dynamic conf = JsonConvert.DeserializeObject<ConfigFile>(json);
+            sr.Close();
+
+            return conf;
         }
 
         //Loads json list with the saves you created
@@ -166,8 +186,10 @@ namespace EasySave_liv2.Model
         } 
 
         //full backup
-        public void Copy(string sourceDirectory, string targetDirectory)
+        public void Copy(string sourceDirectory, string targetDirectory, string name)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
             DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
             DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
@@ -179,12 +201,15 @@ namespace EasySave_liv2.Model
             }
 
             CopyAll(diSource, diTarget);
+
+            sw.Stop();
+
+            WriteLogs(diSource, diTarget, name, sw.ElapsedMilliseconds, 0) ;
         }
 
         //Functional on everyfile and within recursion
         private void CopyOrEncrypt(FileInfo file, DirectoryInfo target, bool overwrite)
         {
-            EncryptExt.Add(".txt");
 
             if (EncryptExt.Count() != 0)
             {
@@ -197,7 +222,6 @@ namespace EasySave_liv2.Model
                     }else {
 
                         file.CopyTo(Path.Combine(target.FullName, file.Name), overwrite);
-                        //Console.WriteLine("Copying file    | {0}", file.Name);
                         return;
                     }
             }
@@ -220,26 +244,37 @@ namespace EasySave_liv2.Model
                 copiedBytes += fi.Length; // increment the size of each copied file.
 
                 // Serialize real-time data to json file
-                CopyOrEncrypt(fi, target, true);
                 // Write string to file in json format
-                RealTimeJson(fi, totalFolderFiles, target);  
+                RealTimeJson(fi, totalFolderFiles, target); 
+                CopyOrEncrypt(fi, target, true);
+                
+                
             }
 
             // Copy each subdirectory using recursion.
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
-                DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
-                CopyAll(diSourceSubDir, nextTargetSubDir);
+                if (diSourceSubDir.Name != diSourceSubDir.Parent.Name)
+                {
+                    DirectoryInfo nextTargetSubDir = target.CreateSubdirectory(diSourceSubDir.Name);
+                    CopyAll(diSourceSubDir, nextTargetSubDir);
+                }
+                    
             }
+
+
         }
 
         //differential backup, supports encryption
-        public void Differential(DirectoryInfo source, DirectoryInfo destination)
+        public void Differential(DirectoryInfo source, DirectoryInfo destination, string name)
         {
-            // Copy files.  
-            bool Emptydestination = true;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             FileInfo[] files = source.GetFiles();
             FileInfo[] destFiles = destination.GetFiles();
+
+            bool Emptydestination = true;
             int totalFolderFiles = 0;
             long totalSize = 0;
 
@@ -249,7 +284,7 @@ namespace EasySave_liv2.Model
             }
 
 
-            // Claculating the totalt number of files to copy
+            // Calculating the total number of files to copy
             foreach (FileInfo file in files)
             {
                 foreach (FileInfo fileD in destFiles)
@@ -301,16 +336,15 @@ namespace EasySave_liv2.Model
             foreach (DirectoryInfo diSourceSubDir in source.GetDirectories())
             {
                 filesNBcount++;
-                DirectoryInfo nextTargetSubDir =
-                destination.CreateSubdirectory(diSourceSubDir.Name);
-                Differential(diSourceSubDir, nextTargetSubDir);
-            }
-        }
+                if (diSourceSubDir.Name != diSourceSubDir.Parent.Name)
+                {
+                    DirectoryInfo nextTargetSubDir = destination.CreateSubdirectory(diSourceSubDir.Name);
+                    Differential(diSourceSubDir, nextTargetSubDir, name);
+                }
 
-        //pour le logiciel métier, c'était pour pas l'oublier que j'ai mis ça
-        public bool isWorkspaceClosed()
-        {
-            return false;
+            }
+            sw.Stop();
+            WriteLogs(source, destination, name, sw.ElapsedMilliseconds, 0);
         }
 
         //starts CryptoSoft.exe process for each file
@@ -319,7 +353,7 @@ namespace EasySave_liv2.Model
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 Arguments = "\"" + src + " \"" + dst + "\"",
-                FileName = @"./info/CryptoSoft.exe"
+                FileName = @"./res/CryptoSoft/CryptoSoft.exe"
             };
 
             using (Process p = new Process())
@@ -338,7 +372,9 @@ namespace EasySave_liv2.Model
             }
         }
 
-        private List<ConfigFile> ReadConfigFile()
+
+        //writes COnfigFile on configuration window closing 
+        public void WriteConfigFile(List<string> prog, List<string> ext)
         {
             if (!File.Exists(configFile))
             {
@@ -348,14 +384,90 @@ namespace EasySave_liv2.Model
             }
 
             StreamReader sr = new StreamReader(configFile);
-            var json = sr.ReadToEnd();
-            List<ConfigFile> saveData = JsonConvert.DeserializeObject<List<ConfigFile>>(json);
-            if (saveData == null)
-                saveData = new List<ConfigFile>();
-            sr.Close();
 
-            return saveData;
+            var json = sr.ReadToEnd();
+            ConfigFile saveData = JsonConvert.DeserializeObject<ConfigFile>(json);
+            
+            sr.Close();
+            File.WriteAllText(configFile, string.Empty);
+
+            if (saveData != null)
+            {
+                //program check
+                if (saveData.Program != null)
+                    saveData.Program = JoinListString(saveData.Program, prog);
+                else
+                    saveData.Program = new List<string>();
+                //extensions check
+                if (saveData.Extensions != null)
+                    saveData.Extensions = JoinListString(saveData.Extensions, ext);
+                else
+                    saveData.Extensions = new List<string>();
+            }
+            else
+                saveData = new ConfigFile(prog, ext);
+            
+
+                                                                                       
+            File.AppendAllText(
+                configFile,
+                JsonConvert.SerializeObject(saveData, Formatting.Indented)
+            ); 
+                                                  
+
         }
-    
+
+        //used to load config into variables
+        public void CheckConfigRequirements()
+        {
+            this.Config = ReadConfigJson();
+
+            if (Config != null)
+            {
+                if (Config.Extensions != null)
+                    EncryptExt = Config.Extensions;
+                else
+                    EncryptExt = new List<string>();
+
+                if (Config.Program != null)
+                    ProgramPreventClose = Config.Program;
+                else
+                    ProgramPreventClose = new List<string>();
+            }
+                
+        }
+
+        //check if a program marked in the config file is open and prevent save
+        //returns true if save can continue.
+        public bool OnSaveProgramPrevention_single(string app)
+        {
+            Process[] processlist = Process.GetProcessesByName(app);
+
+            if (processlist.Length != 0 && processlist != null)
+                return false;
+            else
+                return true;
+
+        }
+
+        private List<string> JoinListString(List<string> first, List<string> second)
+        {
+
+            foreach (var x in first)
+                foreach (var y in second)
+                    if (x == y)
+                        second.Remove(y);
+                
+            if (first == null)
+            {
+                return second;
+            }
+            if (second == null)
+            {
+                return first;
+            }
+
+            return first.Concat(second).ToList();
+        }
     }
 }

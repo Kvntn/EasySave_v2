@@ -6,22 +6,28 @@ using System.Text;
 
 namespace EasySave_liv2.ViewModel
 {
-    class View_Model
+    public class View_Model
     {
 
         private Backup backup = new Backup();
         public List<string> listBackup = new List<string>();
 
+        //attributes for config window
+        public List<string> Programs = new List<string>();
+        public List<string> Extensions = new List<string>();
+
         public View_Model()
         {
             BackupListToName();
+            LoadConfig();
         }
+
+
 
         private void BackupListToName()
         {
             foreach (Newbackup nbu in backup.BackupsList)
-                    listBackup.Add(nbu.taskname); 
-                
+                    listBackup.Add(nbu.taskname);        
         }
 
         public void CreateBackupUI(string source, string destination, string taskname, bool differential)
@@ -37,21 +43,50 @@ namespace EasySave_liv2.ViewModel
             backup.CreateBackup(diS, diD, taskname, diff);
         }
 
+
         public void FindBackupByName(string str)
         {
             foreach(Newbackup bu in backup.BackupsList)
                 if (bu.taskname == str)
                     if (bu.backupType == 1)
                     {
-                        backup.Differential(new DirectoryInfo(bu.source), new DirectoryInfo(bu.destination));
+                        backup.Differential(new DirectoryInfo(bu.source), new DirectoryInfo(bu.destination), bu.taskname);
                         return;
                     }  
                     else
                     {
-                        backup.CopyAll(new DirectoryInfo(bu.source), new DirectoryInfo(bu.destination));
+                        backup.Copy(bu.source, bu.destination, bu.taskname);
                         return;
                     }
   
+        }
+
+        public bool OnSaveProgramPrevention()
+        {
+            bool isOk = true;
+            List<string> apps = this.backup.ProgramPreventClose;
+
+            if (apps != null)
+                foreach (string app in apps)
+                    if (!backup.OnSaveProgramPrevention_single(app))
+                        isOk = false;
+                    else
+                        isOk = true; 
+
+            return isOk;
+        }
+
+
+        internal void SaveConfig(List<string> prog, List<string> ext)
+        {
+            this.backup.WriteConfigFile(prog, ext);
+        }
+
+        internal void LoadConfig()
+        {
+            this.backup.CheckConfigRequirements();
+            this.Programs = this.backup.ProgramPreventClose;
+            this.Extensions = this.backup.EncryptExt;
         }
     }
 }

@@ -1,0 +1,28 @@
+﻿<Window x:Class="EasySave_liv2.ConfigWindow.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasySave_liv2.ConfigWindow"
+        mc:Ignorable="d"
+        Title="ConfigWindow" Height="641" Width="460">
+    <Grid Margin="0,0,-2,1">
+        <Rectangle HorizontalAlignment="Left" Height="554" Margin="222,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="300"/>
+
+        <Rectangle HorizontalAlignment="Left" Height="554" Margin="-77,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="300"/>
+
+        <ListBox x:Name="lb_P" HorizontalAlignment="Left" Height="293" Margin="8,289,0,0" VerticalAlignment="Top" Width="203" SelectionChanged="lb_P_SelectionChanged"/>
+        <ListBox x:Name="lb_E" HorizontalAlignment="Left" Height="293" Margin="232,289,0,0" VerticalAlignment="Top" Width="203" SelectionChanged="lb_E_SelectionChanged"/>
+        <Label Content="Configuration" HorizontalAlignment="Center" Height="74" VerticalAlignment="Top" Width="342" FontFamily="Verdana" FontSize="48" FontStyle="Italic"/>
+        <Label Content="Extensions" HorizontalAlignment="Left" Height="41" Margin="272,96,0,0" VerticalAlignment="Top" Width="133" FontFamily="Verdana" FontSize="20" FontStyle="Italic"/>
+        <Label Content="Programs" HorizontalAlignment="Left" Height="40" Margin="39,96,0,0" VerticalAlignment="Top" Width="125" FontFamily="Verdana" FontSize="20" FontStyle="Italic"/>
+        <Button Content="Add" HorizontalAlignment="Left" Height="20" Margin="12,244,0,0" VerticalAlignment="Top" Width="61" Click="Button_Add_P"/>
+        <Button Content="Remove" HorizontalAlignment="Left" Height="20" Margin="370,244,0,0" VerticalAlignment="Top" Width="61" Click="Button_Remove_E"/>
+        <Button Content="Add" HorizontalAlignment="Left" Height="20" Margin="236,244,0,0" VerticalAlignment="Top" Width="62" Click="Button_Add_E"/>
+        <Button Content="Remove" HorizontalAlignment="Left" Height="20" Margin="146,244,0,0" VerticalAlignment="Top" Width="60" Click="Button_Remove_P"/>
+        <TextBox x:Name="txt_prog" HorizontalAlignment="Left" Height="22" Margin="11,184,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" TextChanged="TextBox_TextChanged_P"/>
+        <TextBox x:Name="txt_ext" HorizontalAlignment="Left" Height="22" Margin="252,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" TextChanged="TextBox_TextChanged_E"/>
+        <Label Content="Close and open this window to see your changes" HorizontalAlignment="Center" Height="24" Margin="0,61,0,0" VerticalAlignment="Top" Width="228" FontSize="10"/>
+
+    </Grid>
+</Window>
