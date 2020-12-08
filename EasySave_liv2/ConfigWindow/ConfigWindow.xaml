@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySave_liv2.ConfigWindow"
         mc:Ignorable="d"
-        Title="ConfigWindow" Height="641" Width="460">
+        Title="EasySave - Configuration window" Height="641" Width="460">
     <Grid Margin="0,0,-2,1">
         <Rectangle HorizontalAlignment="Left" Height="554" Margin="222,82,0,0" Stroke="Black" VerticalAlignment="Top" Width="300"/>
 

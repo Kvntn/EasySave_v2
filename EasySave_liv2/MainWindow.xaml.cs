@@ -45,7 +45,7 @@ namespace EasySave_liv2
         }
 
 
-        //Button related methods
+//-----------------------------Button related methods----------------------------------------
 
         private void Button_Creates(object sender, RoutedEventArgs e)
         {
@@ -55,7 +55,7 @@ namespace EasySave_liv2
             vm.listBackup.Add(input_name.Text);
             //listbox_backup.Items.Insert(names.Count() ,input_name.Text);
             listbox_backup.DataContext = vm.listBackup;
-            
+
 
             if (lang == LangEnum.EN)
                 outputCreate.Text = "Backup successfully created !";
@@ -63,6 +63,8 @@ namespace EasySave_liv2
                 outputCreate.Text = "Sauvegarde créée !";
             else if (lang == LangEnum.RU)
                 outputCreate.Text = "Резервное копирование сохранено !";
+            else if (lang == LangEnum.AR)
+                outputCreate.Text = "تم حفظ النسخ الاحتياطي";
         }
 
         private void Button_Start_Click(object sender, RoutedEventArgs e)
@@ -79,6 +81,8 @@ namespace EasySave_liv2
                     outputSave.Text = "Sauvegarde réussie !";
                 else if (lang == LangEnum.RU)
                     outputCreate.Text = "Cделана резервная копия!";
+                else if (lang == LangEnum.AR)
+                    outputCreate.Text = "تم عمل نسخة احتياطية";
             }
                 
             else
@@ -89,6 +93,8 @@ namespace EasySave_liv2
                     outputSave.Text = "Un programme empêche la sauvegarde !";
                 else if (lang == LangEnum.RU)
                     outputCreate.Text = "Программа препятствует резервному копированию!";
+                else if (lang == LangEnum.AR)
+                    outputCreate.Text = "يتداخل البرنامج مع النسخ الاحتياطي";
             }
                 
 
@@ -134,8 +140,7 @@ namespace EasySave_liv2
         private void FR_Click(object sender, RoutedEventArgs e)
         {
             txt_Create.Text = "Créez une sauvegarde :";
-            txt_Extensions.Text = "Extensions à chiffrer :" +
-                "\n Séparez-les avec ';' (.docx;.txt)";
+            txt_Extensions.Text = "Extensions à chiffrer :";
             txt_Use.Text = "Effectuez une sauvegarde";
             Button_Create.Content = "Créer";
             Button_Start.Content = "Démarrer";
@@ -153,8 +158,7 @@ namespace EasySave_liv2
         private void EN_Click(object sender, RoutedEventArgs e)
         {
             txt_Create.Text = "Create backup :";
-            txt_Extensions.Text = "Extrensions to encrypt :" +
-                "\n Separate them using ';' (.docx;.txt)";
+            txt_Extensions.Text = "Extrensions to encrypt :";
             txt_Use.Text = "Use a backup :";
             Button_Create.Content = "Create";
             Button_Start.Content = "Start";
@@ -172,8 +176,7 @@ namespace EasySave_liv2
         private void RU_Click(object sender, RoutedEventArgs e)
         {
             txt_Create.Text = "Создать резервную копию:";
-            txt_Extensions.Text = "Расширения для шифрования:" +
-                "\n Разделите их, используя ';' (.docx; .txt) ";
+            txt_Extensions.Text = "Расширения для шифрования:";
             txt_Use.Text = "Использовать резервную копию:";
             Button_Create.Content = "Создать";
             Button_Start.Content = "Старт";
@@ -188,7 +191,25 @@ namespace EasySave_liv2
             lang = LangEnum.RU;
         }
 
-// --------------------------NOT IMPLEMENTED METHODS---------------------------------
+        private void AR_Click(object sender, RoutedEventArgs e)
+        {
+            txt_Create.Text = ":" +"إنشاء نسخة احتياطية";
+             txt_Extensions.Text = ":الإضافات المراد تشفيرها";
+             txt_Use.Text = ":" + "استخدم نسخة احتياطية";
+             Button_Create.Content = "إنشاء";
+             Button_Start.Content = "ابدأ";
+             Check_Differential.Content = "تفاضلي) النسخ الاحتياطي الافتراضي هو نسخة احتياطية كاملة)";
+             src_Path.Text = "مسار المصدر";
+            dest_Path.Text = "مسار الوجهة";
+             backup_Name.Text = "اسم النسخة الاحتياطية";
+             button_src.Content = button_dst.Content = "...";
+             button_config.Content = "ملف التكوين";
+             txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
+
+            lang = LangEnum.AR;
+        }
+
+        // --------------------------NOT IMPLEMENTED METHODS---------------------------------
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {

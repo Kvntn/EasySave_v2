@@ -23,13 +23,14 @@ namespace EasySave_liv2.ViewModel
         }
 
 
-
+        //Retrieve saves' names to list them
         private void BackupListToName()
         {
             foreach (Newbackup nbu in backup.BackupsList)
                     listBackup.Add(nbu.taskname);        
         }
 
+        //Calls backup creation 
         public void CreateBackupUI(string source, string destination, string taskname, bool differential)
         {
             int diff = 0;
@@ -43,7 +44,7 @@ namespace EasySave_liv2.ViewModel
             backup.CreateBackup(diS, diD, taskname, diff);
         }
 
-
+        //Find backup object from string
         public void FindBackupByName(string str)
         {
             foreach(Newbackup bu in backup.BackupsList)
@@ -61,6 +62,7 @@ namespace EasySave_liv2.ViewModel
   
         }
 
+        //Returns boolean to MainWindow to prevent save or not
         public bool OnSaveProgramPrevention()
         {
             bool isOk = true;
@@ -76,11 +78,12 @@ namespace EasySave_liv2.ViewModel
             return isOk;
         }
 
-
+        //Writes config on ConfigWindow close and Add button
         internal void SaveConfig(List<string> prog, List<string> ext)
         {
             this.backup.WriteConfigFile(prog, ext);
         }
+
 
         internal void LoadConfig()
         {

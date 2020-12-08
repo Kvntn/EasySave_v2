@@ -32,10 +32,16 @@ namespace EasySave_liv2.ConfigWindow
 
         private void Button_Add_P(object sender, RoutedEventArgs e)
         {
-            if (Prog == null)
-                Prog = new List<string>();
+            bool isCancelled = false;
 
-            Prog.Add(txt_prog.Text);
+            if (Prog != null)
+                if (Prog.Count != 0)
+                    foreach (string str in Prog)
+                        if (str == txt_prog.Text)
+                            isCancelled = true;
+
+            if(!isCancelled)
+                Prog.Add(txt_prog.Text);
 
             txt_prog.Text = String.Empty;
             vm.SaveConfig(Prog, Ext);
@@ -61,6 +67,20 @@ namespace EasySave_liv2.ConfigWindow
         {
             if (Ext == null)
                 Ext = new List<string>();
+
+            bool isCancelled = false;
+
+            if (Ext != null)
+                if (Ext.Count != 0)
+                    foreach (string str in Ext)
+                        if (str == txt_ext.Text)
+                            isCancelled = true;
+
+            if (!isCancelled)
+                Ext.Add(txt_ext.Text);
+
+            txt_ext.Text = String.Empty;
+            vm.SaveConfig(Prog, Ext);
 
             Ext.Add(txt_ext.Text);
             txt_ext.Text = String.Empty;

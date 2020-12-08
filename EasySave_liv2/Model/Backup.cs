@@ -20,13 +20,6 @@ namespace EasySave_liv2.Model
         public static long totalFolderSize = 0;
         public static int filesNBcount = 0;
 
-
-/*        // initialize variables for sequential methode
-        public static string taskname;
-        public static int backupType;
-        public static double time;
-        public static int jsonLength;*/
-
         // list for extensions that need encryption
         public List<string> EncryptExt;
 
@@ -50,9 +43,10 @@ namespace EasySave_liv2.Model
         public Backup()
         {
             BackupsList = LoadList();
-            
             CheckConfigRequirements();
         }
+
+
 
         //Loads config file to allow modifications.
         private ConfigFile ReadConfigJson()
@@ -87,6 +81,9 @@ namespace EasySave_liv2.Model
 
             return BackupsList;
         }
+
+
+//-------------------JSON FILES WRITING LOG/SAVE STATUS--------------------------------------
 
         // logs for executed backups
         private void WriteLogs(DirectoryInfo source, DirectoryInfo destination, string taskname, double timer, int type)
@@ -124,6 +121,39 @@ namespace EasySave_liv2.Model
 
         }
         
+        //Writes backup's status progressively
+        private void RealTimeJson(FileInfo fi, int totalFolderFiles, DirectoryInfo destination)
+        {
+
+            List<RealTimeJson> folderData = new List<RealTimeJson>();
+
+            // Serialize real-time data to json file
+
+            folderData.Add(new RealTimeJson()
+            {
+                path = fi.FullName,
+                name = fi.Name,
+                CurrentFileSize = fi.Length,
+                creationTime = fi.CreationTime,
+                lastWriteTime = fi.LastWriteTime,
+                extension = fi.Extension,
+                remaining_files = totalFolderFiles - filesNBcount,
+                progression = (filesNBcount / totalFolderFiles * 100).ToString(),
+                bytesRemaining = copiedBytes + " out of " + totalFolderSize
+            }); ;
+            string json = JsonConvert.SerializeObject(folderData.ToArray(), Formatting.Indented); //Formatting.Indented is used for a pretty json file
+
+            // Write string to file in json format
+            File.WriteAllText(destination.Parent.FullName + "/json", json); // call parent target folder to save json
+                                                                            // writeAllText to replace the text used for real time
+                                                                            //  "/json" to name json file
+        }
+
+
+
+
+//------------------BACKUP RELATED METHODS-----------------------------------
+
         // logs for created backups
         public void CreateBackup(DirectoryInfo source, DirectoryInfo destination, string taskname, int backupType)
         {
@@ -157,34 +187,6 @@ namespace EasySave_liv2.Model
             File.AppendAllText(jsonList, json); // Write string to file in json format
         }
 
-
-        private void RealTimeJson(FileInfo fi, int totalFolderFiles, DirectoryInfo destination)
-        {
-
-            List<RealTimeJson> folderData = new List<RealTimeJson>();
-
-            // Serialize real-time data to json file
-
-            folderData.Add(new RealTimeJson()
-            {
-                path = fi.FullName,
-                name = fi.Name,
-                CurrentFileSize = fi.Length,
-                creationTime = fi.CreationTime,
-                lastWriteTime = fi.LastWriteTime,
-                extension = fi.Extension,
-                remaining_files = totalFolderFiles - filesNBcount,
-                progression = filesNBcount + " out of " + totalFolderFiles,
-                bytesRemaining = copiedBytes + " out of " + totalFolderSize
-            });
-            string json = JsonConvert.SerializeObject(folderData.ToArray(), Formatting.Indented); //Formatting.Indented is used for a pretty json file
-
-            // Write string to file in json format
-            File.WriteAllText(destination.Parent.FullName + "/json", json); // call parent target folder to save json
-                                                                            // writeAllText to replace the text used for real time
-                                                                            //  "/json" to name json file
-        } 
-
         //full backup
         public void Copy(string sourceDirectory, string targetDirectory, string name)
         {
@@ -205,30 +207,6 @@ namespace EasySave_liv2.Model
             sw.Stop();
 
             WriteLogs(diSource, diTarget, name, sw.ElapsedMilliseconds, 0) ;
-        }
-
-        //Functional on everyfile and within recursion
-        private void CopyOrEncrypt(FileInfo file, DirectoryInfo target, bool overwrite)
-        {
-
-            if (EncryptExt.Count() != 0)
-            {
-                foreach (string ext in EncryptExt)
-                    if (Path.GetExtension(file.FullName) == ext)
-                    {
-                        EncryptFile(file.FullName, Path.Combine(target.Name, file.Name));
-                        return;
-
-                    }else {
-
-                        file.CopyTo(Path.Combine(target.FullName, file.Name), overwrite);
-                        return;
-                    }
-            }
-            else
-            {
-                file.CopyTo(Path.Combine(target.FullName, file.Name), overwrite);
-            }
         }
 
         //used for all types of save
@@ -347,6 +325,36 @@ namespace EasySave_liv2.Model
             WriteLogs(source, destination, name, sw.ElapsedMilliseconds, 0);
         }
 
+
+
+//---------------ENCRYPTION RELATED METHODS------------------------------------
+
+        //Functional on everyfile and within recursion
+        private void CopyOrEncrypt(FileInfo file, DirectoryInfo target, bool overwrite)
+        {
+
+            if (EncryptExt.Count() != 0)
+            {
+                foreach (string ext in EncryptExt)
+                    if (Path.GetExtension(file.FullName) == ext)
+                    {
+                        EncryptFile(file.FullName, Path.Combine(target.Name, file.Name));
+                        return;
+
+                    }
+                    else
+                    {
+
+                        file.CopyTo(Path.Combine(target.FullName, file.Name), overwrite);
+                        return;
+                    }
+            }
+            else
+            {
+                file.CopyTo(Path.Combine(target.FullName, file.Name), overwrite);
+            }
+        }
+
         //starts CryptoSoft.exe process for each file
         private void EncryptFile(string src, string dst)
         {
@@ -363,17 +371,11 @@ namespace EasySave_liv2.Model
             }
         }
 
-        //implemented from interface INotifyPropertyChanged
-        private void RaisePropertyChanged(string property)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-            }
-        }
 
 
-        //writes COnfigFile on configuration window closing 
+//-----------------CONFIG RELATED METHODS -----------------------------------
+
+        //writes ConfigFile on configuration window closing 
         public void WriteConfigFile(List<string> prog, List<string> ext)
         {
             if (!File.Exists(configFile))
@@ -450,24 +452,42 @@ namespace EasySave_liv2.Model
 
         }
 
+        //Merge string lists and remove multiple occurences
         private List<string> JoinListString(List<string> first, List<string> second)
         {
 
             foreach (var x in first)
                 foreach (var y in second)
                     if (x == y)
-                        second.Remove(y);
+                    {
+                        second.Remove(x);
+                        break;
+                    }
+                        
                 
             if (first == null)
-            {
                 return second;
-            }
+            
             if (second == null)
-            {
                 return first;
-            }
+            
 
             return first.Concat(second).ToList();
         }
+
+
+
+//--------------------------------------------------------------------------
+
+        //implemented from interface INotifyPropertyChanged
+        private void RaisePropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
+        }
+
+
     }
 }
