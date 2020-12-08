@@ -1,8 +1,6 @@
 ﻿using EasySave_liv2.Model;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace EasySave_liv2.ViewModel
 {

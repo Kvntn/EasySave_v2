@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EasySave_liv2.View
+﻿namespace EasySave_liv2.View
 {
     enum LangEnum
     {
@@ -10,5 +6,5 @@ namespace EasySave_liv2.View
         EN,
         FR,
         RU
-    } 
+    }
 }

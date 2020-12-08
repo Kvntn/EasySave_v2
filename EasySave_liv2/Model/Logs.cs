@@ -17,6 +17,7 @@ namespace EasySave_liv2.Model
         public long filesize { get; set; }
         public DateTime Horodotage { get; set; }
         public double time { get; set; }
+        public double encryptionTime { get; set; }
     }
 
 }

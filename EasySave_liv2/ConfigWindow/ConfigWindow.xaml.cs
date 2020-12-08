@@ -41,10 +41,12 @@ namespace EasySave_liv2.ConfigWindow
                             isCancelled = true;
 
             if(!isCancelled)
+            {
                 Prog.Add(txt_prog.Text);
-
-            txt_prog.Text = String.Empty;
-            vm.SaveConfig(Prog, Ext);
+                txt_prog.Text = String.Empty;
+                vm.SaveConfig(Prog, Ext);
+            }
+                
         }
 
         private void Button_Remove_P(object sender, RoutedEventArgs e)
@@ -59,8 +61,6 @@ namespace EasySave_liv2.ConfigWindow
                             vm.SaveConfig(Prog, Ext);
                             return;
                         }
-
-
         }
 
         private void Button_Add_E(object sender, RoutedEventArgs e)
@@ -77,15 +77,11 @@ namespace EasySave_liv2.ConfigWindow
                             isCancelled = true;
 
             if (!isCancelled)
+            {
                 Ext.Add(txt_ext.Text);
-
-            txt_ext.Text = String.Empty;
-            vm.SaveConfig(Prog, Ext);
-
-            Ext.Add(txt_ext.Text);
-            txt_ext.Text = String.Empty;
-
-            vm.SaveConfig(Prog, Ext);
+                txt_ext.Text = String.Empty;
+                vm.SaveConfig(Prog, Ext);
+            }
         }
 
         private void Button_Remove_E(object sender, RoutedEventArgs e)
@@ -100,17 +96,6 @@ namespace EasySave_liv2.ConfigWindow
                             vm.SaveConfig(Prog, Ext);
                             return;
                         }
-
-        }
-
-        private void TextBox_TextChanged_P(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void TextBox_TextChanged_E(object sender, TextChangedEventArgs e)
-        {
-
         }
 
         private void lb_P_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -121,6 +106,16 @@ namespace EasySave_liv2.ConfigWindow
         private void lb_E_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             txt_ext.Text = lb_E.SelectedItem.ToString();
+        }
+    
+        private void TextBox_TextChanged_P(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void TextBox_TextChanged_E(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
