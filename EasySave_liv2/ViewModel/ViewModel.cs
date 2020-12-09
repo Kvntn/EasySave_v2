@@ -61,7 +61,7 @@ namespace EasySave_liv2.ViewModel
   
         }
 
-        //Returns boolean to MainWindow to prevent save or not
+        //Returns a boolean to MainWindow to prevent save or not
         public bool OnSaveProgramPrevention()
         {
             bool isOk = true;

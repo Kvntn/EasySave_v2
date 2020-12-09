@@ -9,15 +9,15 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace EasySave_liv2
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    ///  <summary>
+    ///  Interaction logic for MainWindow.xaml
+    ///  </summary>
     public partial class MainWindow : Window
     {
 
         // Attributes
         private View_Model vm = new View_Model();
-        private LangEnum lang = LangEnum.EN;
+        private LangEnum lang = LangEnum.EN; 
         public List<string> BackupNames = new List<string>();
   
 

@@ -12,7 +12,7 @@ namespace EasySave_liv2.Model
     class Backup : INotifyPropertyChanged
     {
 
-        //implmemented by interface INotifyPorpertyChanged
+        // implmemented by interface INotifyPorpertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         // initialize variables for real time Json
