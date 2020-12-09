@@ -23,8 +23,8 @@ namespace EasySave_liv2.ConfigWindow
             this.vm = vm;            
             vm.LoadConfig(); // actualize config content
 
-            Prog = vm.Programs; //importing lists sources
-            Ext = vm.Extensions;
+            Prog = vm.Programs ?? new List<string>(); //importing lists sources
+            Ext = vm.Extensions ?? new List<string>();
 
             lb_P.ItemsSource = Prog; //Lists sources
             lb_E.ItemsSource = Ext;

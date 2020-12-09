@@ -80,9 +80,9 @@ namespace EasySave_liv2
                 else if (lang == LangEnum.FR)
                     outputSave.Text = "Sauvegarde réussie !";
                 else if (lang == LangEnum.RU)
-                    outputCreate.Text = "Cделана резервная копия!";
+                    outputSave.Text = "Cделана резервная копия!";
                 else if (lang == LangEnum.AR)
-                    outputCreate.Text = "تم عمل نسخة احتياطية";
+                    outputSave.Text = "تم عمل نسخة احتياطية";
             }
                 
             else
@@ -92,9 +92,9 @@ namespace EasySave_liv2
                 else if (lang == LangEnum.FR)
                     outputSave.Text = "Un programme empêche la sauvegarde !";
                 else if (lang == LangEnum.RU)
-                    outputCreate.Text = "Программа препятствует резервному копированию!";
+                    outputSave.Text = "Программа препятствует резервному копированию!";
                 else if (lang == LangEnum.AR)
-                    outputCreate.Text = "يتداخل البرنامج مع النسخ الاحتياطي";
+                    outputSave.Text = "يتداخل البرنامج مع النسخ الاحتياطي";
             }
                 
 

@@ -45,6 +45,7 @@ namespace EasySave_liv2.ViewModel
         //Find backup object from string
         public void FindBackupByName(string str)
         {
+            if (backup.BackupsList.Count > 0)
             foreach(Newbackup bu in backup.BackupsList)
                 if (bu.taskname == str)
                     if (bu.backupType == 1)
@@ -82,7 +83,7 @@ namespace EasySave_liv2.ViewModel
             this.backup.WriteConfigFile(prog, ext);
         }
 
-
+        //Check and load configuration for MainWindow use
         internal void LoadConfig()
         {
             this.backup.CheckConfigRequirements();

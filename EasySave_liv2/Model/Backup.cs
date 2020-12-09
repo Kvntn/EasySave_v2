@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics; // used to calculate time
 using System.IO; // used to manage files and directories
 using System.Linq;
+using System.Threading;
 using Newtonsoft.Json; // used for json
 
 namespace EasySave_liv2.Model
@@ -50,14 +51,23 @@ namespace EasySave_liv2.Model
         //Loads config file to allow modifications.
         private ConfigFile ReadConfigJson()
         {
+            dynamic conf;
+
             if (!File.Exists(configFile))
-                File.Create(configFile);
+            {
+                var file = File.Create(configFile);
+                file.Close();
+            }
 
-            StreamReader sr = new StreamReader(configFile);
 
-            var json = sr.ReadToEnd();
-            dynamic conf = JsonConvert.DeserializeObject<ConfigFile>(json);
-            sr.Close();
+            using (StreamReader sr = new StreamReader(configFile))
+            {
+                var json = sr.ReadToEnd();
+                conf = JsonConvert.DeserializeObject<ConfigFile>(json);
+                sr.Close();
+            }
+
+           
 
             return conf;
         }
@@ -65,18 +75,23 @@ namespace EasySave_liv2.Model
         //Loads json list with the saves you created
         private List<Newbackup> LoadList()
         {
-
             if (!File.Exists(jsonList))
-                File.Create(jsonList);
+            {
+                var file = File.Create(jsonList);
+                file.Close();
+            }
 
-            StreamReader sr = new StreamReader(jsonList);
-
-            var json = sr.ReadToEnd();
-            BackupsList = JsonConvert.DeserializeObject<List<Newbackup>>(json);
-            sr.Close();
+            using (StreamReader sr = new StreamReader(jsonList))
+            {
+                var json = sr.ReadToEnd();
+                BackupsList = JsonConvert.DeserializeObject<List<Newbackup>>(json);
+                sr.Close();
+            }
 
             if (BackupsList != null)
                 backupCount = BackupsList.Count;
+            else
+                BackupsList = new List<Newbackup>();
 
             return BackupsList;
         }
@@ -91,7 +106,8 @@ namespace EasySave_liv2.Model
             {
                 if (!new DirectoryInfo(documentStorage).Exists)
                     new DirectoryInfo(documentStorage).Create();
-                File.Create(logfilepath);
+                var file = File.Create(logfilepath);
+                file.Close();
             }
 
             StreamReader sr = new StreamReader(logfilepath);
