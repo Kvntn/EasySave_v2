@@ -26,6 +26,7 @@ namespace EasySave_liv2
         {
             InitializeComponent();
             listbox_backup.ItemsSource = vm.listBackup;
+            this.EN_Start();
 
         }
 
@@ -140,7 +141,7 @@ namespace EasySave_liv2
         private void FR_Click(object sender, RoutedEventArgs e)
         {
             txt_Create.Text = "Créez une sauvegarde :";
-            txt_Extensions.Text = "Extensions à chiffrer :";
+            txt_Extensions.Text = "Saisissez les extensions des fichiers à chiffrer";
             txt_Use.Text = "Effectuez une sauvegarde";
             Button_Create.Content = "Créer";
             Button_Start.Content = "Démarrer";
@@ -157,8 +158,13 @@ namespace EasySave_liv2
 
         private void EN_Click(object sender, RoutedEventArgs e)
         {
+            EN_Start();
+        }
+
+        private void EN_Start()
+        {
             txt_Create.Text = "Create backup :";
-            txt_Extensions.Text = "Extrensions to encrypt :";
+            txt_Extensions.Text = "Extrensions of files tou need to encrypt";
             txt_Use.Text = "Use a backup :";
             Button_Create.Content = "Create";
             Button_Start.Content = "Start";
@@ -176,7 +182,7 @@ namespace EasySave_liv2
         private void RU_Click(object sender, RoutedEventArgs e)
         {
             txt_Create.Text = "Создать резервную копию:";
-            txt_Extensions.Text = "Расширения для шифрования:";
+            txt_Extensions.Text = "Расширения файлов, которые нужно зашифровать";
             txt_Use.Text = "Использовать резервную копию:";
             Button_Create.Content = "Создать";
             Button_Start.Content = "Старт";
@@ -193,14 +199,14 @@ namespace EasySave_liv2
 
         private void AR_Click(object sender, RoutedEventArgs e)
         {
-            txt_Create.Text = ":" +"إنشاء نسخة احتياطية";
-             txt_Extensions.Text = ":الإضافات المراد تشفيرها";
+             txt_Create.Text = ":" +"إنشاء نسخة احتياطية";
+             txt_Extensions.Text = ":امتدادات الملفات التي تحتاج إلى تشفيرها";
              txt_Use.Text = ":" + "استخدم نسخة احتياطية";
              Button_Create.Content = "إنشاء";
              Button_Start.Content = "ابدأ";
              Check_Differential.Content = "تفاضلي) النسخ الاحتياطي الافتراضي هو نسخة احتياطية كاملة)";
              src_Path.Text = "مسار المصدر";
-            dest_Path.Text = "مسار الوجهة";
+             dest_Path.Text = "مسار الوجهة";
              backup_Name.Text = "اسم النسخة الاحتياطية";
              button_src.Content = button_dst.Content = "...";
              button_config.Content = "ملف التكوين";

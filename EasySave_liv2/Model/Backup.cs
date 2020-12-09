@@ -53,6 +53,9 @@ namespace EasySave_liv2.Model
         {
             dynamic conf;
 
+            if (!Directory.Exists(documentStorage))
+                Directory.CreateDirectory(documentStorage);
+
             if (!File.Exists(configFile))
             {
                 var file = File.Create(configFile);
@@ -75,6 +78,9 @@ namespace EasySave_liv2.Model
         //Loads json list with the saves you created
         private List<Newbackup> LoadList()
         {
+            if (!Directory.Exists(documentStorage))
+                Directory.CreateDirectory(documentStorage);
+
             if (!File.Exists(jsonList))
             {
                 var file = File.Create(jsonList);
