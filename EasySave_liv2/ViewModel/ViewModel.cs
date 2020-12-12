@@ -1,18 +1,62 @@
-﻿using EasySave_liv2.Model;
+﻿using EasySave.Model;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace EasySave_liv2.ViewModel
+namespace EasySave.ViewModel
 {
-    public class View_Model
+    public class View_Model : INotifyPropertyChanged
     {
 
         private Backup backup = new Backup();
+        private List<string> _programs;
+        private List<string> _extensions;
+        private List<string> _pextensions;
+
         public List<string> listBackup = new List<string>();
 
         //attributes for config window
-        public List<string> Programs = new List<string>();
-        public List<string> Extensions = new List<string>();
+        public List<string> Programs
+        {
+            get { return _programs ?? new List<string>(); }
+            set 
+            { 
+                _programs = value;
+                NotifyPropertyChanged("programs");
+            }
+        }
+        public List<string> Extensions
+        {
+            get { return _extensions ?? new List<string>(); }
+            set
+            {
+                _extensions = value;
+                NotifyPropertyChanged("extensions");
+            }
+        }
+        public List<string> PExtensions
+        {
+            get { return _pextensions ?? new List<string>(); }
+            set
+            {
+                _pextensions = value;
+                NotifyPropertyChanged("extensions");
+            }
+        }
+
+        // Property Change Logic  
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
 
         public View_Model()
         {
@@ -31,6 +75,9 @@ namespace EasySave_liv2.ViewModel
         //Calls backup creation 
         public void CreateBackupUI(string source, string destination, string taskname, bool differential)
         {
+
+            if (!CheckPathBoxContent(source, destination))
+                return;
             int diff = 0;
 
             DirectoryInfo diS = new DirectoryInfo(source);
@@ -46,19 +93,19 @@ namespace EasySave_liv2.ViewModel
         public void FindBackupByName(string str)
         {
             if (backup.BackupsList.Count > 0)
-            foreach(Newbackup bu in backup.BackupsList)
-                if (bu.taskname == str)
-                    if (bu.backupType == 1)
-                    {
-                        backup.Differential(new DirectoryInfo(bu.source), new DirectoryInfo(bu.destination), bu.taskname);
-                        return;
-                    }  
-                    else
-                    {
-                        backup.Copy(bu.source, bu.destination, bu.taskname);
-                        return;
-                    }
-  
+                foreach(Newbackup bu in backup.BackupsList)
+                    if (bu.taskname == str)
+                        if (bu.backupType == 1)
+                        {
+                            new Thread(() => backup.DifferentialCall(new DirectoryInfo(bu.source), new DirectoryInfo(bu.destination), bu.taskname)).Start();
+                            return;
+                        }
+                        else
+                        {
+                            new Thread(() => backup.Copy(bu.source, bu.destination, bu.taskname)).Start();
+                            return;
+                        }
+                
         }
 
         //Returns a boolean to MainWindow to prevent save or not
@@ -78,17 +125,46 @@ namespace EasySave_liv2.ViewModel
         }
 
         //Writes config on ConfigWindow close and Add button
-        internal void SaveConfig(List<string> prog, List<string> ext)
+        internal void SaveConfig(List<string> prog, List<string> ext, List<string> pext)
         {
-            this.backup.WriteConfigFile(prog, ext);
+            this.backup.WriteConfigFile(prog, ext, pext);
         }
 
         //Check and load configuration for MainWindow use
         internal void LoadConfig()
         {
             this.backup.CheckConfigRequirements();
-            this.Programs = this.backup.ProgramPreventClose;
-            this.Extensions = this.backup.EncryptExt;
+            Programs = this.backup.ProgramPreventClose;
+            Extensions = this.backup.EncryptExt;
+            PExtensions = this.backup.PriorityExtensions;
+        }
+
+        //----------------------------------PATH INPUT CHECK-------------------------------
+
+        private bool CheckPathBoxContent(string source, string destination)
+        {
+            if (Directory.Exists(source) && Directory.Exists(destination))
+                return true;
+            else
+                return false;
+        }
+
+        public string getSource(string str)
+        {
+            foreach (Newbackup bu in backup.BackupsList)
+                if (bu.taskname == str)
+                    return bu.source;
+                    
+            return "";     
+               
+        }
+
+        public string getDestination(string str)
+        {
+            foreach (Newbackup bu in backup.BackupsList)
+                if (bu.taskname == str)
+                    return bu.destination;
+            return "";
         }
     }
 }

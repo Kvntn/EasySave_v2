@@ -5,7 +5,7 @@ using System.IO; // used to manage files and directories
 using System.Threading; // used for progression tests (not required)
 using Newtonsoft.Json; // used for json
 
-namespace EasySave_liv2.Model
+namespace EasySave.Model
 {
     public class Newbackup
     {

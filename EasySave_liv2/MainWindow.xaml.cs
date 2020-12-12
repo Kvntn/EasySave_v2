@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using EasySave_liv2.View;
-using EasySave_liv2.ViewModel;
+using EasySave.View;
+using EasySave.ViewModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using MessageBox = System.Windows.MessageBox;
 
-namespace EasySave_liv2
+namespace EasySave
 {
     ///  <summary>
     ///  Interaction logic for MainWindow.xaml
@@ -18,35 +22,51 @@ namespace EasySave_liv2
         // Attributes
         private View_Model vm = new View_Model();
         private LangEnum lang = LangEnum.EN; 
-        public List<string> BackupNames = new List<string>();
+        public ObservableCollection<string> BackupNames = new ObservableCollection<string>();
   
 
 
         public MainWindow()
         {
-            InitializeComponent();
-            listbox_backup.ItemsSource = vm.listBackup;
-            this.EN_Start();
+            if (Process.GetProcessesByName(
+                System.IO.Path.GetFileNameWithoutExtension(
+                    System.Reflection.Assembly.GetEntryAssembly()
+                    .Location)).Length > 1)
+                this.Close();
 
+            InitializeComponent();
+            listbox_backup.DataContext = this;
+
+            foreach (string str in vm.listBackup)
+            {
+                BackupNames.Add(str);
+                listbox_backup.Items.Add(str);
+            }
+
+            this.EN_Start();
         }
 
 
 // ----------------------Useful methods for a more user-friendly interface---------------------------------
-        //ListView methods
-
+        
         private void ListBox_BackupList(object sender, SelectionChangedEventArgs e)
         {
             if (listbox_backup.SelectedItem != null)
-                outputSave.Text = listbox_backup.SelectedItem.ToString();
+            {
+                input_name.Text = listbox_backup.SelectedItem.ToString();
+                input_src.Text = vm.getSource(input_src.Text);
+                input_dst.Text = vm.getDestination(input_dst.Text);
+            }
+                
         }
 
-        private void listView1_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
+        private void ListBox_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
         {
             System.Windows.MessageBox.Show(e.Item.Text.ToString());
         }
 
 
-//-----------------------------Button related methods----------------------------------------
+//-----------------------------BUTTON RELATED METHODS----------------------------------------
 
         private void Button_Creates(object sender, RoutedEventArgs e)
         {
@@ -55,7 +75,7 @@ namespace EasySave_liv2
 
             vm.listBackup.Add(input_name.Text);
             //listbox_backup.Items.Insert(names.Count() ,input_name.Text);
-            listbox_backup.DataContext = vm.listBackup;
+            
 
 
             if (lang == LangEnum.EN)
@@ -66,6 +86,9 @@ namespace EasySave_liv2
                 outputCreate.Text = "Резервное копирование сохранено !";
             else if (lang == LangEnum.AR)
                 outputCreate.Text = "تم حفظ النسخ الاحتياطي";
+
+            listbox_backup.Items.Add(input_name.Text);
+           
         }
 
         private void Button_Start_Click(object sender, RoutedEventArgs e)
@@ -105,12 +128,12 @@ namespace EasySave_liv2
         //Source path browsing
         private void Button_Select_Src(object sender, RoutedEventArgs e)
         {
-            using (var dlg = new CommonOpenFileDialog())
+            using (var cof = new CommonOpenFileDialog())
             {
-                dlg.IsFolderPicker = true;
-                CommonFileDialogResult rs = dlg.ShowDialog();
+                cof.IsFolderPicker = true;
+                CommonFileDialogResult rs = cof.ShowDialog();
                 if (rs == CommonFileDialogResult.Ok)
-                    input_src.Text = dlg.FileName;
+                    input_src.Text = cof.FileName;
 
             }
         }
@@ -134,9 +157,9 @@ namespace EasySave_liv2
             new ConfigWindow.ConfigWindow(vm).Show();
         }
 
-        
-// ----------------------LANGUAGE SWITCH METHODS (used in droplist)---------------------------------
-        
+
+// ------------------------------LANGUAGE SWITCH METHODS---------------------------------
+
 
         private void FR_Click(object sender, RoutedEventArgs e)
         {
@@ -213,6 +236,28 @@ namespace EasySave_liv2
              txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
 
             lang = LangEnum.AR;
+        }
+
+        //------------------------CHECK IF PROCESS ALREADY RUNNING---------------------------
+
+        private void CheckProcessEasySave()
+        {
+            Process p = Process.GetCurrentProcess();
+            foreach (Process Processus in Process.GetProcessesByName("EasySave"))
+            {
+                /*Il ne faut pas comparer par rapport à cette instance 
+                 * du programme mais une autre (grâce à l'ID)*/
+                if (p.Id != Processus.Id)
+                {
+                    //Si les ID sont différents mais de même nom ==> 2 fois le même programme
+                    if (p.ProcessName == Processus.ProcessName)
+                    {
+                        MessageBox.Show("Process cannot be started twice or more");
+                        this.Close();
+                    }
+                }
+
+            }
         }
 
         // --------------------------NOT IMPLEMENTED METHODS---------------------------------

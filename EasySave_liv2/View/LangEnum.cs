@@ -1,4 +1,4 @@
-﻿namespace EasySave_liv2.View
+﻿namespace EasySave.View
 {
     enum LangEnum
     {
