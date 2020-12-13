@@ -108,7 +108,7 @@ namespace EasySave.ViewModel
                 
         }
 
-        //Returns a boolean to MainWindow to prevent save or not
+        //Returns a boolean to MainWindow to prevent from saving or not
         public bool OnSaveProgramPrevention()
         {
             bool isOk = true;
@@ -149,22 +149,30 @@ namespace EasySave.ViewModel
                 return false;
         }
 
-        public string getSource(string str)
+        public string GetSource(string str)
         {
+            string res = "";
             foreach (Newbackup bu in backup.BackupsList)
                 if (bu.taskname == str)
-                    return bu.source;
-                    
-            return "";     
+                {
+                    res = bu.source;
+                    break;
+                }
+            return res;     
                
         }
 
-        public string getDestination(string str)
+        public string GetDestination(string str)
         {
+            string res = "";
             foreach (Newbackup bu in backup.BackupsList)
                 if (bu.taskname == str)
-                    return bu.destination;
-            return "";
+                {
+                    res = bu.destination;
+                    break;
+                }
+                    
+            return res;
         }
     }
 }

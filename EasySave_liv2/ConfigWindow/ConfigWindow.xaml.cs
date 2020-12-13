@@ -62,7 +62,7 @@ namespace EasySave.ConfigWindow
 
             if(!isCancelled)
             {
-                lb_P.Items.Add(txt_ext.Text);
+                lb_P.Items.Add(txt_prog.Text);
                 vm.Programs.Add(txt_prog.Text);
                 txt_prog.Text = String.Empty;
                 vm.SaveConfig(vm.Programs, vm.Extensions, vm.PExtensions);
@@ -169,12 +169,14 @@ namespace EasySave.ConfigWindow
 
         private void lb_P_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txt_prog.Text = lb_P.SelectedItem.ToString();
+            if(lb_P.SelectedItem != null)
+                txt_prog.Text = lb_P.SelectedItem.ToString();
         }
 
         private void lb_E_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txt_ext.Text = lb_E.SelectedItem.ToString();
+            if (lb_E.SelectedItem != null)
+                txt_ext.Text = lb_E.SelectedItem.ToString();
         }
     
         private void TextBox_TextChanged_P(object sender, TextChangedEventArgs e)
@@ -189,7 +191,8 @@ namespace EasySave.ConfigWindow
 
         public void lb_PE_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            txt_pext.Text = lb_PE.SelectedItem.ToString();
+            if (lb_PE.SelectedItem != null)
+                txt_pext.Text = lb_PE.SelectedItem.ToString();
         }
     }
 }

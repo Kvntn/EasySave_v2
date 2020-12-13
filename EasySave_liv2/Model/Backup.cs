@@ -6,6 +6,7 @@ using System.IO; // used to manage files and directories
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json; // used for json
+using EasySave.Model.Remote;
 
 namespace EasySave.Model
 {
@@ -47,8 +48,9 @@ namespace EasySave.Model
         private readonly object identicalPathLock = new object();
 
         //Mutex
-        private static Mutex mutLog = new Mutex();
-        private static Mutex mutState = new Mutex();
+        private static readonly Mutex mutLog = new Mutex();
+        private static readonly Mutex mutState = new Mutex();
+        Thread ServerThread;
 
         public Backup()
         {
@@ -262,6 +264,12 @@ namespace EasySave.Model
                 totalFolderSize += fi.Length;
             }
 
+            sw.Stop();
+            while (OnSaveProgramPrevention_all())
+            {
+                Thread.Sleep(1000);
+            }
+            sw.Start();
             double cryptime = CopyAll(diSource, diTarget);
 
             sw.Stop();
@@ -270,7 +278,7 @@ namespace EasySave.Model
             WriteLogs(diSource, diTarget, name, sw.ElapsedMilliseconds, 0, cryptime);
         }
 
-        //DO NOT USE, USE DifferentialCall(...) FOR CORRECT LOGS
+        //YOU CAN'T USE THIS ONE, USE DifferentialCall(...) FOR CORRECT LOGS OUTPUT
         //differential backup, supports encryption
         private void Differential(DirectoryInfo source, DirectoryInfo destination, string name)
         {
@@ -302,14 +310,14 @@ namespace EasySave.Model
                     if (file.Name == fileD.Name && file.LastWriteTime > fileD.LastWriteTime)
                     {
                         totalFolderFiles++;
-                        totalSize = totalSize + fileD.Length;
+                        totalSize += fileD.Length;
                     }
 
                     // Copy all new files  
                     else if (!File.Exists(Path.Combine(destination.FullName, file.Name)))
                     {
                         totalFolderFiles++;
-                        totalSize = totalSize + fileD.Length;
+                        totalSize += fileD.Length;
                     }
                 }
             }
@@ -318,11 +326,18 @@ namespace EasySave.Model
             {
                 foreach (FileInfo fileD in destFiles)
                 {
+                    sw.Stop();
+                    while(OnSaveProgramPrevention_all())
+                    {
+                        Thread.Sleep(1000);
+                    }
+                    sw.Start();
+
                     Emptydestination = false;
                     // Copy only modified files
                     if (file.Name == fileD.Name && file.LastWriteTime > fileD.LastWriteTime)
                     {
-                        cryptime = cryptime + CopyOrEncrypt(fileD, destination, true);
+                        cryptime += CopyOrEncrypt(fileD, destination, true);
                         filesNBcount++;
                         mutState.WaitOne();
                         RealTimeJson(file, totalFolderFiles, destination);
@@ -331,7 +346,7 @@ namespace EasySave.Model
                     // Copy all new files  
                     else if (!File.Exists(Path.Combine(destination.FullName, file.Name)))
                     {
-                        cryptime = cryptime + CopyOrEncrypt(fileD, destination, true);
+                        cryptime += CopyOrEncrypt(fileD, destination, true);
                         filesNBcount++;
                         mutState.WaitOne();
                         RealTimeJson(file, totalFolderFiles, destination);
@@ -434,17 +449,49 @@ namespace EasySave.Model
         private FileInfo[] OrderFilesByPExtensions(DirectoryInfo dir)
         {
             int nbPriority = 0;
+            int nbNormal = 0;
+            bool isFirst = false;
+
             FileInfo[] files = dir.GetFiles();
+            FileInfo[] priority = new FileInfo[files.Length];
+            FileInfo[] normal = new FileInfo[files.Length];
+            int totalLength = files.Length;
+
             foreach (FileInfo file in files)
+            {
                 foreach (string str in PriorityExtensions)
+                {
+                    isFirst = false;
                     if (file.Extension == str)
                     {
-                        // FUNCTIONALITY NOT IMPLEMENTED
+                        isFirst = true;
+                        break;
                     }
+                }
+
+                if (isFirst)
+                {
+                    priority[nbPriority] = file;
+                    nbPriority++;
+                }
+                else
+                {
+                    priority[nbNormal] = file; 
+                    nbNormal++;
+                }  
+            }
+                
 
             
+            Array.Resize<FileInfo>(ref priority, nbPriority);
+            Array.Resize<FileInfo>(ref normal, nbNormal);
 
-            return null;
+            files = new FileInfo[totalLength];
+            Array.Copy(normal, priority, totalLength);
+            Array.Copy(priority, files, totalLength);
+
+
+            return files;
         }
 
 //---------------ENCRYPTION RELATED METHODS------------------------------------
@@ -561,6 +608,20 @@ namespace EasySave.Model
             else
                 return true;
 
+        }
+
+        private bool OnSaveProgramPrevention_all()
+        {
+            bool isOk = true;
+            foreach (string program in ProgramPreventClose)
+            {
+                if(OnSaveProgramPrevention_single(program))
+                {
+                    isOk = false;
+                    break;
+                }
+            }
+            return isOk;
         }
 
         //Creates path to the save if it has been deleted

@@ -20,8 +20,9 @@
             <RowDefinition Height="283"/>
         </Grid.RowDefinitions>
 
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="350" Margin="-104,1,0,0" Grid.Row="2" Stroke="Black" VerticalAlignment="Top" Width="1344"/>
         <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="740" Margin="217,-117,0,0" Grid.RowSpan="3" Stroke="Black" VerticalAlignment="Top" Width="889"/>
+
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="350" Margin="-104,1,0,0" Grid.Row="2" Stroke="Black" VerticalAlignment="Top" Width="1344"/>
 
         <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="1" VerticalAlignment="Top" Height="0" Width="0"/>
         <TextBlock x:Name="txt_Create" HorizontalAlignment="Left" Height="62" Margin="17,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="579" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"><Run Text="Create backup"/><Run Language="fr-fr" Text=" :"/></TextBlock>
@@ -68,6 +69,7 @@
             <ComboBoxItem Content="RU" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="RU_Click" Grid.Row="1"/>
             <ComboBoxItem Content="AR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="AR_Click" Grid.Row="1"/>
         </ComboBox>
+        <Button x:Name="button_server" Content="Start server" HorizontalAlignment="Left" Height="22" Margin="50,244,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="Button_Server"/>
 
 
 

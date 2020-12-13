@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
+using EasySave.Model.Remote;
 using EasySave.View;
 using EasySave.ViewModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -22,19 +23,16 @@ namespace EasySave
         // Attributes
         private View_Model vm = new View_Model();
         private LangEnum lang = LangEnum.EN; 
+
         public ObservableCollection<string> BackupNames = new ObservableCollection<string>();
   
 
 
         public MainWindow()
         {
-            if (Process.GetProcessesByName(
-                System.IO.Path.GetFileNameWithoutExtension(
-                    System.Reflection.Assembly.GetEntryAssembly()
-                    .Location)).Length > 1)
-                this.Close();
-
+            CheckExistingProcess();
             InitializeComponent();
+
             listbox_backup.DataContext = this;
 
             foreach (string str in vm.listBackup)
@@ -43,7 +41,9 @@ namespace EasySave
                 listbox_backup.Items.Add(str);
             }
 
+
             this.EN_Start();
+            
         }
 
 
@@ -54,15 +54,10 @@ namespace EasySave
             if (listbox_backup.SelectedItem != null)
             {
                 input_name.Text = listbox_backup.SelectedItem.ToString();
-                input_src.Text = vm.getSource(input_src.Text);
-                input_dst.Text = vm.getDestination(input_dst.Text);
+                input_src.Text = vm.GetSource(input_src.Text);
+                input_dst.Text = vm.GetDestination(input_dst.Text);
             }
                 
-        }
-
-        private void ListBox_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
-        {
-            System.Windows.MessageBox.Show(e.Item.Text.ToString());
         }
 
 
@@ -157,6 +152,29 @@ namespace EasySave
             new ConfigWindow.ConfigWindow(vm).Show();
         }
 
+//------------------------------ UNIQUE APP RUNNING --------------------------------
+
+        private void CheckExistingProcess()
+        {
+            Process[] ProcessList = Process.GetProcesses();
+            Process currentProcess = Process.GetCurrentProcess();
+
+            foreach (Process Processus in ProcessList)
+            {
+                /*Il ne faut pas comparer par rapport à cette instance
+                                   du programme mais une autre (grâce à l'ID)*/
+                if (currentProcess.Id != Processus.Id)
+                {
+                    //Si les ID sont différents mais de même nom ==> 2 fois le même programme
+                    if (currentProcess.ProcessName == Processus.ProcessName)
+                    {
+                        MessageBox.Show("Le programme ne peut pas être lancé 2 fois!");
+                        this.Close();
+                    }
+                }
+
+            }
+        }
 
 // ------------------------------LANGUAGE SWITCH METHODS---------------------------------
 
@@ -238,28 +256,6 @@ namespace EasySave
             lang = LangEnum.AR;
         }
 
-        //------------------------CHECK IF PROCESS ALREADY RUNNING---------------------------
-
-        private void CheckProcessEasySave()
-        {
-            Process p = Process.GetCurrentProcess();
-            foreach (Process Processus in Process.GetProcessesByName("EasySave"))
-            {
-                /*Il ne faut pas comparer par rapport à cette instance 
-                 * du programme mais une autre (grâce à l'ID)*/
-                if (p.Id != Processus.Id)
-                {
-                    //Si les ID sont différents mais de même nom ==> 2 fois le même programme
-                    if (p.ProcessName == Processus.ProcessName)
-                    {
-                        MessageBox.Show("Process cannot be started twice or more");
-                        this.Close();
-                    }
-                }
-
-            }
-        }
-
         // --------------------------NOT IMPLEMENTED METHODS---------------------------------
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -290,6 +286,14 @@ namespace EasySave
         private void TextBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void Button_Server(object sender, RoutedEventArgs e)
+        {
+            ServerSocket SkS = new ServerSocket();
+            Thread STh = new Thread(new ThreadStart(SkS.StartListening));
+            STh.Name = "Server Socket Thread";
+            STh.Start();
         }
     }
 }
