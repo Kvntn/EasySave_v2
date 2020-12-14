@@ -32,7 +32,7 @@ namespace EasySave
             InitializeComponent();
 
             listbox_backup.DataContext = this;
-            dataGrid.DataContext = this.vm.Backups;
+            dataGrid.DataContext = this.vm;
 
             foreach (string str in vm.listBackup)
             {
@@ -55,7 +55,6 @@ namespace EasySave
                 input_src.Text = vm.GetSource(input_src.Text);
                 input_dst.Text = vm.GetDestination(input_dst.Text);
             }
-                
         }
 
 

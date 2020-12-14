@@ -71,10 +71,10 @@
         </ComboBox>
         
         <Button x:Name="button_server" Content="Start server" HorizontalAlignment="Left" Height="22" Margin="50,244,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="Button_Server"/>
-        <DataGrid Name="dataGrid" ItemsSource="{Binding vm.Backups}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="358,63,99,34" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
+        <DataGrid Name="dataGrid" ItemsSource="{Binding Backups}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="358,63,99,34" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding vm.Backups.taskname}">
+                <DataGridTextColumn Binding="{Binding taskname}">
                     <DataGridTextColumn.Header>
                         <TextBlock x:Name="name_backup_grid" Text="Name                            "/>
                     </DataGridTextColumn.Header>

@@ -50,7 +50,7 @@ namespace EasySave.ViewModel
         }
         public List<Newbackup> Backups
         {
-            get { return _backups ?? new List<Newbackup>(); }
+            get { return _backups; }
             set
             {
                 _backups = value;
@@ -64,16 +64,14 @@ namespace EasySave.ViewModel
         private void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
-            {
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            
         }
 
         public View_Model()
         {
             BackupListToName();
             LoadConfig();
-            
         }
 
 
