@@ -15,8 +15,10 @@ namespace EasySave.ViewModel
         private List<string> _programs;
         private List<string> _extensions;
         private List<string> _pextensions;
+        private List<Newbackup> _backups;
 
         public List<string> listBackup = new List<string>();
+        
 
         //attributes for config window
         public List<string> Programs
@@ -25,7 +27,7 @@ namespace EasySave.ViewModel
             set 
             { 
                 _programs = value;
-                NotifyPropertyChanged("programs");
+                NotifyPropertyChanged("Programs");
             }
         }
         public List<string> Extensions
@@ -34,7 +36,7 @@ namespace EasySave.ViewModel
             set
             {
                 _extensions = value;
-                NotifyPropertyChanged("extensions");
+                NotifyPropertyChanged("Extensions");
             }
         }
         public List<string> PExtensions
@@ -43,7 +45,16 @@ namespace EasySave.ViewModel
             set
             {
                 _pextensions = value;
-                NotifyPropertyChanged("extensions");
+                NotifyPropertyChanged("PEextensions");
+            }
+        }
+        public List<Newbackup> Backups
+        {
+            get { return _backups ?? new List<Newbackup>(); }
+            set
+            {
+                _backups = value;
+                NotifyPropertyChanged("Backups");
             }
         }
 
@@ -62,6 +73,7 @@ namespace EasySave.ViewModel
         {
             BackupListToName();
             LoadConfig();
+            
         }
 
 
@@ -139,7 +151,24 @@ namespace EasySave.ViewModel
             PExtensions = this.backup.PriorityExtensions;
         }
 
-        //----------------------------------PATH INPUT CHECK-------------------------------
+        internal void loadDataGrid(IList<string> lstr)
+        {
+            List<Newbackup> temp = new List<Newbackup>();
+
+            if (backup.BackupsList.Count > 0)
+                foreach (string str in lstr)
+                    foreach (Newbackup bu in backup.BackupsList)
+                        if (bu.taskname == str)
+                        {
+                            temp.Add(bu);
+                            break;
+                        }
+                            
+            Backups = temp;
+                        
+        }
+
+//----------------------------------PATH INPUT CHECK-------------------------------
 
         private bool CheckPathBoxContent(string source, string destination)
         {

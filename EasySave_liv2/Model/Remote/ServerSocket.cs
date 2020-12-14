@@ -20,9 +20,9 @@ namespace EasySave.Model.Remote
         public void StartListening()
         {
             MessageBox.Show(Thread.CurrentThread.Name, "Current thread");
+
             // Establish the local endpoint for the socket.  
-            // The DNS name of the computer  
-            // running the listener is "localhost".  
+            // running the listener on "localhost".  
             IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11304);
@@ -35,7 +35,7 @@ namespace EasySave.Model.Remote
             try
             {
                 listener.Bind(localEndPoint);
-                listener.Listen(100);
+                listener.Listen(1);
 
                 while (true)
                 {
@@ -49,7 +49,7 @@ namespace EasySave.Model.Remote
 
                     // Wait until a connection is made before continuing.  
                     allDone.WaitOne();
-                    MessageBox.Show("Client connected", localEndPoint.Address.ToString());
+                    MessageBox.Show("Client connected, sending data", localEndPoint.Address.ToString());
                     
                 }
 

@@ -22,14 +22,12 @@ namespace EasySave_RemoteClient
     /// </summary>
     public partial class MainWindow : Window
     {
+        ClientSocket cs;
 
         public MainWindow()
         {
             InitializeComponent();
-            ClientSocket cs = new ClientSocket();
-            Thread CTh = new Thread(new ThreadStart(cs.StartClient));
-            CTh.Name = "Client Server Socket";
-            CTh.Start();
+            this.cs = new ClientSocket();
         }
 
         private void Button_Start_Click(object sender, RoutedEventArgs e)
@@ -51,10 +49,30 @@ namespace EasySave_RemoteClient
 
         }
 
+        private void Button_Connect(object sender, RoutedEventArgs e)
+        {
+            cs.StartSocketThread(input_ip.Text);
+        }
 
+        private void EN_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
 
+        private void FR_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void AR_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void RU_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
 
     }
 }

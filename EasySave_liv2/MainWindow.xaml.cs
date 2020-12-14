@@ -22,11 +22,9 @@ namespace EasySave
 
         // Attributes
         private View_Model vm = new View_Model();
-        private LangEnum lang = LangEnum.EN; 
+        private LangEnum lang = LangEnum.EN;
 
         public ObservableCollection<string> BackupNames = new ObservableCollection<string>();
-  
-
 
         public MainWindow()
         {
@@ -34,13 +32,13 @@ namespace EasySave
             InitializeComponent();
 
             listbox_backup.DataContext = this;
+            dataGrid.DataContext = this.vm.Backups;
 
             foreach (string str in vm.listBackup)
             {
                 BackupNames.Add(str);
                 listbox_backup.Items.Add(str);
             }
-
 
             this.EN_Start();
             
@@ -69,9 +67,7 @@ namespace EasySave
             vm.CreateBackupUI(input_src.Text, input_dst.Text, input_name.Text, diff);
 
             vm.listBackup.Add(input_name.Text);
-            //listbox_backup.Items.Insert(names.Count() ,input_name.Text);
-            
-
+            listbox_backup.Items.Add(input_name.Text);
 
             if (lang == LangEnum.EN)
                 outputCreate.Text = "Backup successfully created !";
@@ -81,8 +77,6 @@ namespace EasySave
                 outputCreate.Text = "Резервное копирование сохранено !";
             else if (lang == LangEnum.AR)
                 outputCreate.Text = "تم حفظ النسخ الاحتياطي";
-
-            listbox_backup.Items.Add(input_name.Text);
            
         }
 
@@ -120,6 +114,46 @@ namespace EasySave
             
         }
 
+        private void Button_Server(object sender, RoutedEventArgs e)
+        {
+            ServerSocket SkS = new ServerSocket();
+            Thread STh = new Thread(new ThreadStart(SkS.StartListening));
+            STh.Name = "Server Socket Thread";
+            STh.Start();
+        }
+
+        private void Button_Add_Click(object sender, RoutedEventArgs e)
+        {
+            ObservableCollection<string> temp = new ObservableCollection<string>();
+
+            if (listbox_backup.SelectedItems.Count > 0)
+            {
+                foreach (string item in listbox_backup.SelectedItems)
+                    temp.Add(item);
+
+                vm.loadDataGrid(temp);
+            }
+                
+            
+            else
+            {
+                if (lang == LangEnum.EN)
+                    MessageBox.Show("No backup selected");
+                else
+                    MessageBox.Show("Aucune sauvegarde séléctionnée");
+            }
+        }
+
+        private void Button_Pause_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Stop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         //Source path browsing
         private void Button_Select_Src(object sender, RoutedEventArgs e)
         {
@@ -150,6 +184,23 @@ namespace EasySave
         private void Button_Config(object sender, RoutedEventArgs e)
         {
             new ConfigWindow.ConfigWindow(vm).Show();
+        }
+
+//----------------------------- BUTTON FOR UNIQUE BACKUPS (DATAGRID)------------------------------
+
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
 //------------------------------ UNIQUE APP RUNNING --------------------------------
@@ -185,7 +236,7 @@ namespace EasySave
             txt_Extensions.Text = "Saisissez les extensions des fichiers à chiffrer";
             txt_Use.Text = "Effectuez une sauvegarde";
             Button_Create.Content = "Créer";
-            Button_Start.Content = "Démarrer";
+            Button_Add.Content = "Ajouter";
             Check_Differential.Content = "Différentielle (par défaut, la sauvegarde est complète)";
             src_Path.Text = "Chemin source";
             dest_Path.Text = "Chemin de dest.";
@@ -208,7 +259,7 @@ namespace EasySave
             txt_Extensions.Text = "Extrensions of files tou need to encrypt";
             txt_Use.Text = "Use a backup :";
             Button_Create.Content = "Create";
-            Button_Start.Content = "Start";
+            Button_Add.Content = "Add";
             Check_Differential.Content = "Differential (default backup is a complete backup)";
             src_Path.Text = "Source path";
             dest_Path.Text = "Destination path";
@@ -226,7 +277,7 @@ namespace EasySave
             txt_Extensions.Text = "Расширения файлов, которые нужно зашифровать";
             txt_Use.Text = "Использовать резервную копию:";
             Button_Create.Content = "Создать";
-            Button_Start.Content = "Старт";
+            Button_Add.Content = "Старт";
             Check_Differential.Content = "Дифференциальная (по умолчанию резервная копия - полная)";
             src_Path.Text = "Исходный путь";
             dest_Path.Text = "Путь назначения";
@@ -244,7 +295,7 @@ namespace EasySave
              txt_Extensions.Text = ":امتدادات الملفات التي تحتاج إلى تشفيرها";
              txt_Use.Text = ":" + "استخدم نسخة احتياطية";
              Button_Create.Content = "إنشاء";
-             Button_Start.Content = "ابدأ";
+             Button_Add.Content = "ابدأ";
              Check_Differential.Content = "تفاضلي) النسخ الاحتياطي الافتراضي هو نسخة احتياطية كاملة)";
              src_Path.Text = "مسار المصدر";
              dest_Path.Text = "مسار الوجهة";
@@ -287,13 +338,6 @@ namespace EasySave
         {
 
         }
-
-        private void Button_Server(object sender, RoutedEventArgs e)
-        {
-            ServerSocket SkS = new ServerSocket();
-            Thread STh = new Thread(new ThreadStart(SkS.StartListening));
-            STh.Name = "Server Socket Thread";
-            STh.Start();
-        }
     }
+
 }

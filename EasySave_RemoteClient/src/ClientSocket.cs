@@ -19,14 +19,23 @@ namespace EasySave_RemoteClient.src
 
         // The response from the remote device.  
         private string response = string.Empty;
+        public string ip = string.Empty;
+        Thread CTh;
 
+        public void StartSocketThread(string ip)
+        {
+            this.ip = ip;
+            CTh = new Thread(new ThreadStart(this.StartClient));
+            CTh.Name = "Client Server Socket";
+            CTh.Start();
+        }
         public void StartClient()
         {
             // Connect to a remote device.  
             try
             {
                 // Establish the remote endpoint for the socket.  
-                IPHostEntry ipHostInfo = Dns.GetHostEntry("localhost");
+                IPHostEntry ipHostInfo = Dns.GetHostEntry(this.ip);
                 IPAddress ipAddress = ipHostInfo.AddressList[0];
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 

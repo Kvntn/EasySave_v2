@@ -17,8 +17,25 @@
         <TextBlock x:Name="txt_Use" HorizontalAlignment="Left" Height="56" TextWrapping="Wrap" VerticalAlignment="Top" Width="750" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Margin="242,108,0,0" Grid.ColumnSpan="2"><Run Text="Use backup"/><Run Language="fr-fr" Text="s"/><Run Text=" :"/></TextBlock>
         <TextBlock x:Name="outputSave" HorizontalAlignment="Left" Height="30" Margin="99,357,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Grid.Column="1" />
         <ListBox x:Name="listbox_backup" ItemsSource="{Binding MainWindow.BackupNames}" HorizontalAlignment="Left" Height="184" Margin="38,112,0,0" VerticalAlignment="Top" Width="368" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="" Grid.Column="1" FontFamily="Verdana" FontSize="14"/>
-        <TextBlock x:Name="txt_Use_Copy" HorizontalAlignment="Left" Height="55" TextWrapping="Wrap" VerticalAlignment="Top" Width="750" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Margin="240,23,0,0" Grid.ColumnSpan="2"><Run Text="Connect"/><Run Text=" "/><Run Language="fr-fr" Text="to IP"/><Run Text=":"/></TextBlock>
-        <TextBox x:Name="input_src" Text="192.168.1.1" HorizontalAlignment="Left" Height="33" Margin="39,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290" AutomationProperties.IsRequiredForForm="True" Grid.Column="1" FontSize="22" FontFamily="Verdana" />
+        <TextBlock x:Name="txt_Use_Copy" HorizontalAlignment="Left" Height="48" TextWrapping="Wrap" VerticalAlignment="Top" Width="750" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Margin="240,12,0,0" Grid.ColumnSpan="2"><Run Text="Connect"/><Run Text=" "/><Run Language="fr-fr" Text="to IP"/><Run Text=":"/></TextBlock>
+        <TextBox x:Name="input_ip" HorizontalAlignment="Left" Height="29" Margin="39,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290" AutomationProperties.IsRequiredForForm="True" Grid.Column="1" FontSize="22" FontFamily="Verdana" />
+        <Button x:Name="button_Connect" Content="Connect" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="102" Margin="328,21,0,0" Click="Button_Connect" Grid.Column="1"/>
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontSize="36" FontStyle="Italic" RenderTransformOrigin="0.5,0.5" Margin="0,128,325,0" Height="57" VerticalAlignment="Top" HorizontalAlignment="Right" Width="190">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="-0.929"/>
+
+                    <TranslateTransform X="0.983" Y="1.445"/>
+                </TransformGroup>
+            </TextBlock.RenderTransform><Run Text="EasySave"/><LineBreak/><Run/></TextBlock>
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="0,179,314,0" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Width="200"><Run Language="fr-fr" Text="For your cleanest backups."/></TextBlock>
+        <ComboBox Margin="81,239,409,0" Height="26" VerticalAlignment="Top">
+            <ComboBoxItem Content="EN" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="EN_Click" Grid.Row="1" IsSelected="True"/>
+            <ComboBoxItem Content="FR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="FR_Click" Grid.Row="1"/>
+            <ComboBoxItem Content="RU" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="RU_Click" Grid.Row="1"/>
+            <ComboBoxItem Content="AR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="AR_Click" Grid.Row="1"/>
+        </ComboBox>
 
     </Grid>
 </Window>

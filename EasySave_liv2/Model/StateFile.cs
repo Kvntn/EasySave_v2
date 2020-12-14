@@ -18,35 +18,34 @@ namespace EasySave.Model
         public string targetPath;
         public int backupType;
 
-        public StateFile(string sourcePath, string targetPath, string backupName, int nbFiles, long sizeFiles)
+        public StateFile(string sourcePath, string targetPath, string backupName, int type, int nbFiles, long sizeFiles)
         {
-            this.sourcePath = sourcePath;
-            this.targetPath = targetPath;
-            this.backupName = backupName;
-            this.timeStamp = DateTime.Now;
+            if (type == 1)
+            {
+                this.sourcePath = sourcePath;
+                this.targetPath = targetPath;
+                this.backupName = backupName;
+                this.timeStamp = DateTime.Now;
 
-            this.GetSourceStateDiff(nbFiles, sizeFiles);
+                this.GetSourceStateDiff(nbFiles, sizeFiles);
 
-            //should be executed in controller (loop)
-            this.GetTargetState();
-            this.WriteStateFile();
-            //should be executed in controller (loop)
-        }
+                this.GetTargetState();
+                this.WriteStateFile();
 
-        public StateFile(string sourcePath, string targetPath, string backupName)
-        {
-            this.sourcePath = sourcePath;
-            this.targetPath = targetPath;
-            this.backupName = backupName;
-            this.timeStamp = DateTime.Now;
+            }
+            else if (type == 0)
+            {
+                this.sourcePath = sourcePath;
+                this.targetPath = targetPath;
+                this.backupName = backupName;
+                this.timeStamp = DateTime.Now;
 
-            this.GetSourceStateFull();
+                this.GetSourceStateFull();
 
+                this.GetTargetState();
+                this.WriteStateFile();
 
-            //should be executed in controller (loop)
-            this.GetTargetState();
-            this.WriteStateFile();
-            //should be executed in controller (loop)
+            } 
         }
 
         public void GetSourceStateFull()
@@ -100,16 +99,17 @@ namespace EasySave.Model
         public void WriteStateFile()
         {
             string pathToCreate = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string pathToCheck = pathToCreate + "\\EasySave\\statefile";
+            string pathToCheck = pathToCreate + "\\EasySave\\statefile.json";
+
             if (!Directory.Exists(pathToCheck))
             {
-                Directory.CreateDirectory(pathToCreate + "\\EasySave\\statefile");
+                Directory.CreateDirectory(pathToCreate + "\\EasySave\\statefile.json");
             }
             string jsonPath = pathToCheck + "\\" + this.backupName + ".json";
+
             if (!File.Exists(jsonPath))
             {
                 File.Create(pathToCheck + "\\" + this.backupName + ".json").Close();
-
             }
 
             if (new FileInfo(jsonPath).Length != 0)
@@ -123,6 +123,12 @@ namespace EasySave.Model
                 tw.WriteLine(json.ToString());
                 tw.Close();
             }
+        }
+
+        public void UpdateState()
+        {
+            this.GetTargetState();
+            this.WriteStateFile();
         }
 
     }

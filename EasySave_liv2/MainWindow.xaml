@@ -36,7 +36,7 @@
 
         <Button x:Name="Button_Create" Content="Create" Grid.Column="2" Height="22" Margin="0,191,0,0" VerticalAlignment="Top" Click="Button_Creates" Grid.Row="1" HorizontalAlignment="Center" Width="134"/>
         <CheckBox x:Name="Check_Differential" Content="Differential (Full backup by default)" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="144,192,0,0" VerticalAlignment="Top" Width="418" FontFamily="Verdana" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Button x:Name="Button_Start" Content="Save" Grid.Column="2" HorizontalAlignment="Center" Height="21" VerticalAlignment="Top" Width="132" Grid.Row="2" Margin="0,143,0,0" Click="Button_Start_Click"/>
+        <Button x:Name="Button_Add" Content="Add" Grid.Column="1" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="79" Grid.Row="2" Margin="264,143,0,0" Click="Button_Add_Click"/>
 
         <TextBlock x:Name="txt_Use" HorizontalAlignment="Left" Height="55" TextWrapping="Wrap" VerticalAlignment="Top" Width="751" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="2" Margin="23,5,0,0" Grid.Column="1" Grid.ColumnSpan="2"><Run Language="fr-fr" Text="Use backup :"/></TextBlock>
         <TextBlock x:Name="txt_Extensions" HorizontalAlignment="Center" Height="75" Margin="0,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" FontFamily="Verdana" FontStyle="Italic" TextAlignment="Center" Grid.Row="2" Text="Extensions to encrypt  Separate them using ';' (.docx;.txt)"/>
@@ -60,18 +60,82 @@
         <Button x:Name="button_config" Content="Configuration File" HorizontalAlignment="Left" Height="28" Margin="25,99,0,0" Grid.Row="2" VerticalAlignment="Top" Width="167" Click="Button_Config"/>
         <TextBlock x:Name="outputCreate" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="168,237,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" />
         <TextBlock x:Name="label_copyright" TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="29,263,35,-32" Grid.Row="2" FontSize="8"><Run Text="Copyright Kvendev, Lyna2008 (git)"/></TextBlock>
-        <TextBlock x:Name="outputSave" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="500,205,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Grid.ColumnSpan="2" />
-        <ListBox x:Name="listbox_backup" ItemsSource="{Binding MainWindow.BackupNames}" HorizontalAlignment="Left" Height="184" Margin="31,64,0,0" VerticalAlignment="Top" Width="369" SelectionChanged="ListBox_BackupList" Grid.Column="1" Grid.Row="2" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="{Binding EasySave.View_Model.listBackup}"/>
+        <TextBlock x:Name="outputSave" Grid.Column="2" HorizontalAlignment="Left" Height="44" Margin="69,199,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" />
+        <ListBox x:Name="listbox_backup"  HorizontalAlignment="Left" Height="184" Margin="31,64,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="ListBox_BackupList" Grid.Column="1" Grid.Row="2" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="{Binding EasySave.MainWindow}"/>
 
-        <ComboBox Margin="81,174,95,0" Grid.RowSpan="2" Height="26" VerticalAlignment="Top">
+        <ComboBox Margin="81,165,95,0" Grid.RowSpan="2" Height="26" VerticalAlignment="Top">
             <ComboBoxItem Content="EN" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="EN_Click" Grid.Row="1" IsSelected="True"/>
             <ComboBoxItem Content="FR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="FR_Click" Grid.Row="1"/>
             <ComboBoxItem Content="RU" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="RU_Click" Grid.Row="1"/>
             <ComboBoxItem Content="AR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="AR_Click" Grid.Row="1"/>
         </ComboBox>
+        
         <Button x:Name="button_server" Content="Start server" HorizontalAlignment="Left" Height="22" Margin="50,244,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="Button_Server"/>
+        <DataGrid Name="dataGrid" ItemsSource="{Binding vm.Backups}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="358,63,99,34" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
 
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding vm.Backups.taskname}">
+                    <DataGridTextColumn.Header>
+                        <TextBlock x:Name="name_backup_grid" Text="Name                            "/>
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
 
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Progress" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <ProgressBar Value="{Binding Percentage}" x:Name="progress"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Play " />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Play"  Click="Play_Click" Tag="{Binding taskname}">
+
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Pause" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Pause" Click="Pause_Click" Tag="{Binding taskname}">
+
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="Stop" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Stop" Click="Stop_Click" Tag="{Binding taskname}">
+
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <Button x:Name="Button_Start" Content="Start" Grid.Column="2" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,116,0,0" Click="Button_Start_Click"/>
+        <Button x:Name="Button_Pause" Content="Pause" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,177,0,0" Click="Button_Pause_Click"/>
+        <Button x:Name="Button_Stop" Content="Stop" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,146,0,0" Click="Button_Stop_Click"/>
 
     </Grid>
 </Window>

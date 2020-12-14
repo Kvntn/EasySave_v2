@@ -41,6 +41,8 @@ namespace EasySave.Model
         private readonly static string logfilepath = documentStorage + @"\ExecutedBackups.json";
         private readonly static string configFile = documentStorage + @"\config.json";
 
+        public StateFile sf;
+
         // lock for multi-threading purposes (one lock should be used for one resource only)
         private readonly object logLock = new object();
         private readonly object jsonLock = new object();
@@ -50,12 +52,11 @@ namespace EasySave.Model
         //Mutex
         private static readonly Mutex mutLog = new Mutex();
         private static readonly Mutex mutState = new Mutex();
-        Thread ServerThread;
 
         public Backup()
         {
             BackupsList = LoadList();
-            CheckConfigRequirements();
+            CheckConfigRequirements();   
         }
 
 
@@ -123,8 +124,7 @@ namespace EasySave.Model
             if (!File.Exists(logfilepath))
             {
                 CheckBuildTargetFolder(logfilepath);
-                var file = File.Create(logfilepath);
-                file.Close();
+                File.Create(logfilepath).Close();
             }
 
             
@@ -282,6 +282,7 @@ namespace EasySave.Model
         //differential backup, supports encryption
         private void Differential(DirectoryInfo source, DirectoryInfo destination, string name)
         {
+
             CheckBuildTargetFolder(destination.FullName);
 
             Stopwatch sw = new Stopwatch();
@@ -319,6 +320,7 @@ namespace EasySave.Model
                         totalFolderFiles++;
                         totalSize += fileD.Length;
                     }
+                    sf = new StateFile(source.FullName, destination.FullName, name, 1, totalFolderFiles, totalSize);
                 }
             }
 
