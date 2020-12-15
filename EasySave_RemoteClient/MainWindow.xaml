@@ -12,14 +12,12 @@
             <ColumnDefinition Width="269*"/>
             <ColumnDefinition Width="231*"/>
         </Grid.ColumnDefinitions>
-
-        <TextBlock x:Name="txt_Use" HorizontalAlignment="Left" Height="56" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Margin="242,108,0,0" Grid.ColumnSpan="2"><Run Text="Use backup"/><Run Language="fr-fr" Text="s"/><Run Text=" :"/></TextBlock>
         <TextBlock x:Name="outputSave" HorizontalAlignment="Left" Height="30" Margin="99,357,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Grid.Column="1" />
-        <ListBox x:Name="listbox_backup" ItemsSource="{Binding StrList}" HorizontalAlignment="Left" Height="214" Margin="13,204,0,0" VerticalAlignment="Top" Width="311" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="" FontFamily="Verdana" FontSize="14"/>
-        <TextBlock x:Name="txt_Use_Copy" HorizontalAlignment="Left" Height="48" TextWrapping="Wrap" VerticalAlignment="Top" Width="318" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Margin="240,12,0,0" Grid.ColumnSpan="2"><Run Text="Connect"/><Run Text=" "/><Run Language="fr-fr" Text="to IP"/><Run Text=":"/></TextBlock>
-        <TextBox x:Name="input_ip" HorizontalAlignment="Center" Height="29" Margin="0,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290" AutomationProperties.IsRequiredForForm="True" Grid.Column="1" FontSize="22" FontFamily="Verdana" />
-        <Button x:Name="button_Connect" Content="Connect" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="102" Margin="86,59,0,0" Click="Button_Connect" Grid.Column="1"/>
-        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontSize="36" FontStyle="Italic" RenderTransformOrigin="0.5,0.5" Margin="0,25,333,0" Height="57" VerticalAlignment="Top" HorizontalAlignment="Right" Width="190">
+        <ListBox x:Name="listbox_backup" ItemsSource="{Binding StrList}" HorizontalAlignment="Left" Height="311" Margin="47,101,0,0" VerticalAlignment="Top" Width="311" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="" FontFamily="Verdana" FontSize="14"/>
+        <TextBlock x:Name="txt_Use_Copy" HorizontalAlignment="Left" Height="61" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" FontFamily="Verdana" FontSize="20" FontStyle="Italic" Margin="271,14,0,0" TextAlignment="Center"><Run Text="Connect"/><Run Text=" "/><Run Text="to "/><Run Text="remote server :"/></TextBlock>
+        <TextBox x:Name="input_ip" HorizontalAlignment="Left" Height="29" Margin="456,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="207" AutomationProperties.IsRequiredForForm="True" FontSize="18" FontFamily="Verdana" Grid.ColumnSpan="2" />
+        <Button x:Name="button_Connect" Content="Connect" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="71" Margin="140,24,0,0" Click="Button_Connect" Grid.Column="1"/>
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontSize="36" FontStyle="Italic" RenderTransformOrigin="0.5,0.5" Margin="0,8,311,0" Height="57" VerticalAlignment="Top" HorizontalAlignment="Right" Width="190">
             <TextBlock.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -28,15 +26,9 @@
                     <TranslateTransform X="0.983" Y="1.445"/>
                 </TransformGroup>
             </TextBlock.RenderTransform><Run Text="EasySave"/><LineBreak/><Run/></TextBlock>
-        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="0,76,322,0" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Width="200"><Run Language="fr-fr" Text="For your cleanest backups."/></TextBlock>
-        <ComboBox Margin="73,136,417,0" Height="26" VerticalAlignment="Top">
-            <ComboBoxItem Content="EN" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="EN_Click" Grid.Row="1" IsSelected="True"/>
-            <ComboBoxItem Content="FR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="FR_Click" Grid.Row="1"/>
-            <ComboBoxItem Content="RU" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="RU_Click" Grid.Row="1"/>
-            <ComboBoxItem Content="AR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="AR_Click" Grid.Row="1"/>
-        </ComboBox>
-        <Button x:Name="Button_Add" Content="Add" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="79" Margin="335,299,0,0" Click="Button_Add_Click"/>
-        <DataGrid x:Name="dataGrid" ItemsSource="{Binding backend}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="429,203,132,20" Grid.ColumnSpan="2">
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="0,59,300,0" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Width="200"><Run Language="fr-fr" Text="For your cleanest backups."/></TextBlock>
+        <Button x:Name="Button_Add" Content="Add" HorizontalAlignment="Left" Height="68" VerticalAlignment="Top" Width="46" Margin="376,223,0,0" Click="Button_Add_Click"/>
+        <DataGrid x:Name="dataGrid" ItemsSource="{Binding backend}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="433,100,128,37" Grid.ColumnSpan="2">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding StrList}">
@@ -92,10 +84,10 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <Button x:Name="Button_Start" Content="Start" Grid.Column="1" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="76" Margin="359,270,0,0" Click="Button_Start_Click"/>
-        <Button x:Name="Button_Pause" Content="Pause" Grid.Column="1" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Margin="359,331,0,0" Click="Button_Pause_Click"/>
-        <Button x:Name="Button_Stop" Content="Stop" Grid.Column="1" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Margin="359,300,0,0" Click="Button_Stop_Click"/>
-        <Button x:Name="button_Disconnect" Content="Disconnect" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="102" Margin="273,59,0,0" Click="Button_Disconnect" Grid.Column="1"/>
+        <Button x:Name="Button_Start" Content="Start" Grid.Column="1" HorizontalAlignment="Left" Height="58" VerticalAlignment="Top" Width="76" Margin="359,142,0,0" Click="Button_Start_Click"/>
+        <Button x:Name="Button_Pause" Content="Pause" Grid.Column="1" HorizontalAlignment="Left" Height="61" VerticalAlignment="Top" Width="76" Margin="360,229,0,0" Click="Button_Pause_Click"/>
+        <Button x:Name="Button_Stop" Content="Stop" Grid.Column="1" HorizontalAlignment="Left" Height="59" VerticalAlignment="Top" Width="76" Margin="361,313,0,0" Click="Button_Stop_Click"/>
+        <Button x:Name="button_Disconnect" Content="Disconnect" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="70" Margin="216,24,0,0" Click="Button_Disconnect" Grid.Column="1"/>
 
     </Grid>
 </Window>
