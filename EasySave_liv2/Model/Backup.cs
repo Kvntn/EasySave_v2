@@ -6,7 +6,6 @@ using System.IO; // used to manage files and directories
 using System.Linq;
 using System.Threading;
 using Newtonsoft.Json; // used for json
-using EasySave.Model.Remote;
 
 namespace EasySave.Model
 {
@@ -52,6 +51,7 @@ namespace EasySave.Model
         //Mutex
         private static readonly Mutex mutLog = new Mutex();
         private static readonly Mutex mutState = new Mutex();
+        private static readonly Mutex mutEncrypt = new Mutex();
 
         public Backup()
         {
@@ -126,7 +126,6 @@ namespace EasySave.Model
                 CheckBuildTargetFolder(logfilepath);
                 File.Create(logfilepath).Close();
             }
-
             
             StreamReader sr = new StreamReader(logfilepath);
             dynamic json = sr.ReadToEnd();
@@ -135,7 +134,6 @@ namespace EasySave.Model
                 saveData = new List<Logs>();
             sr.Close();
             File.WriteAllText(logfilepath, string.Empty);
-
 
             saveData.Add(new Logs()
             {
@@ -541,14 +539,14 @@ namespace EasySave.Model
                 Arguments = "\"" + src + "\" \"" + dst + "\"",
                 FileName = @"./res/CryptoSoft/CryptoSoft.exe"
             };
-            lock(encryptLock)
+
+            mutEncrypt.WaitOne();
+            using (Process p = new Process())
             {
-                using (Process p = new Process())
-                {
-                    p.StartInfo = startInfo;
-                    p.Start();
-                }
+                p.StartInfo = startInfo;
+                p.Start();
             }
+            mutEncrypt.ReleaseMutex();
             
         }
 

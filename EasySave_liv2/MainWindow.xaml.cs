@@ -115,10 +115,7 @@ namespace EasySave
 
         private void Button_Server(object sender, RoutedEventArgs e)
         {
-            ServerSocket SkS = new ServerSocket();
-            Thread STh = new Thread(new ThreadStart(SkS.StartListening));
-            STh.Name = "Server Socket Thread";
-            STh.Start();
+            vm.StartServer();
         }
 
         private void Button_Add_Click(object sender, RoutedEventArgs e)
@@ -130,7 +127,7 @@ namespace EasySave
                 foreach (string item in listbox_backup.SelectedItems)
                     temp.Add(item);
 
-                vm.loadDataGrid(temp);
+                vm.LoadDataGrid(temp);
             }
                 
             

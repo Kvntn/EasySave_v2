@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using EasySave_RemoteClient.src;
 
 namespace EasySave_RemoteClient
@@ -20,38 +13,115 @@ namespace EasySave_RemoteClient
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+   
+    public partial class MainWindow : Window    
     {
-        ClientSocket cs;
+        private enum LangEnum { FR, EN, RU, AR }
+
+        private LangEnum lang = LangEnum.EN;
+        private Backend backend = new Backend();
+        private ObservableCollection<string> lstr = new ObservableCollection<string>();
+        private ObservableCollection<string> grid = new ObservableCollection<string>();
 
         public MainWindow()
         {
             InitializeComponent();
-            this.cs = new ClientSocket();
-        }
 
-        private void Button_Start_Click(object sender, RoutedEventArgs e)
-        {
+            listbox_backup.DataContext = this.backend;
+            dataGrid.DataContext = this;
 
-           /* if (CONNECTION SUCCESSFUL)
-            {
-                foreach (string str in listbox_backup.SelectedItems)
-                    jsp encore FindBackupByName(str);
+            listbox_backup.ItemsSource = lstr;
+            dataGrid.ItemsSource = grid;
 
-                outputSave.Text = "Backup successfully done !";
-
-            }
-
-            else
-            {
-                outputSave.Text = "A program prevents from saving !";
-            }*/
-
+            input_ip.Text = "localhost";
         }
 
         private void Button_Connect(object sender, RoutedEventArgs e)
         {
-            cs.StartSocketThread(input_ip.Text);
+            try
+            {
+                if (lstr.Count > 0)
+                    lstr.Clear();
+                backend.StartSocketThread(input_ip.Text, "Data");
+                while(!Backend.receivedData && backend.SocketThreadState == ThreadState.Running);
+                foreach (string str in backend.StrList)
+                    lstr.Add(str);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Server not found " + ex.ToString());
+            }
+        }
+
+        private void Button_Disconnect(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                backend.StartSocketThread(input_ip.Text, "closeConnection");
+                Thread.Sleep(1000);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Server not found " + ex.ToString());
+            }
+        }
+
+        private void Button_Add_Click(object sender, RoutedEventArgs e)
+        {
+           
+            if (lstr.Count == 0)
+            {
+                MessageBox.Show("You must be connected to a server.");
+                return;
+            }
+
+            if (grid.Count > 0)
+                grid.Clear();
+
+            if (lstr.Count == 0)
+                return;
+
+            if (listbox_backup.SelectedItems.Count > 0)
+            {
+                foreach (string item in listbox_backup.SelectedItems)
+                    grid.Add(item);
+                backend.LoadDataGrid(grid);
+            }
+
+            else
+            {
+                if (lang == LangEnum.EN)
+                    MessageBox.Show("No backup selected");
+                else
+                    MessageBox.Show("Aucune sauvegarde séléctionnée");
+            }
+        }
+        private void Button_Start_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Pause_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_Stop_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void EN_Click(object sender, RoutedEventArgs e)
@@ -74,5 +144,6 @@ namespace EasySave_RemoteClient
 
         }
 
+        
     }
 }
