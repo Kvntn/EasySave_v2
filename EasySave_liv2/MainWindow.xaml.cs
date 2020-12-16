@@ -46,7 +46,7 @@ namespace EasySave
                 listbox_backup.Items.Add(str);
             }
 
-            this.EN_Start();
+            //this.EN_Start();
             
         }
 
@@ -277,7 +277,7 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Configuration file";
             txt_Config.Text = "Add program that may prevent from saving successfully (without \".exe\" extension)";
-            output_txt.Text = "Sortie :";
+            //output_txt.Text = "Sortie :";
             Button_Start.Content = "Start";
             Button_Pause.Content = "Pause";
             Button_Stop.Content = "Stop";
@@ -299,7 +299,7 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Файл конфигурации";
             txt_Config.Text = "Добавить программы, которые могут вызвать конфликты с резервными копиями (без \".exe\")";
-            output_txt.Text = "Вывод :";
+            //output_txt.Text = "Вывод :";
             Button_Start.Content = "Старт";
             Button_Pause.Content = "Пауза";
             Button_Stop.Content = "Стоп";
@@ -321,7 +321,7 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "ملف التكوين";
             txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
-            output_txt.Text = ":انتاج |";
+            //output_txt.Text = ":انتاج |";
             Button_Start.Content = "ابدأ";
             Button_Pause.Content = "وقفة";
             Button_Stop.Content = "توقف";
