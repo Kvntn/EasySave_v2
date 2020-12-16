@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using EasySave.Model.Remote;
 using EasySave.View;
 using EasySave.ViewModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using ThreadState = System.Threading.ThreadState;
 using MessageBox = System.Windows.MessageBox;
 
 namespace EasySave
 {
     ///  <summary>
     ///  Interaction logic for MainWindow.xaml
+    ///  Translates data from the View_Model class to the UI
+    ///  It sends users queries to the View_Model
+    ///  (Four translations of the UI were added)
     ///  </summary>
     public partial class MainWindow : Window
     {
@@ -115,7 +121,12 @@ namespace EasySave
 
         private void Button_Server(object sender, RoutedEventArgs e)
         {
-            vm.StartServer();
+            if(vm.STh == null)
+                vm.StartServer();
+            else if (vm.STh.ThreadState != ThreadState.Running)
+                vm.StartServer();
+            else
+                MessageBox.Show("Try restarting the server");
         }
 
         private void Button_Add_Click(object sender, RoutedEventArgs e)
@@ -172,7 +183,6 @@ namespace EasySave
                 CommonFileDialogResult rs = dlg.ShowDialog();
                 if (rs == CommonFileDialogResult.Ok)
                     input_dst.Text = dlg.FileName;
-
             }
         }
 
@@ -240,6 +250,10 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Fichier de configuration";
             txt_Config.Text = "Ajoutez les programmes pouvant causer des conflits avec les sauvegardes (sans \".exe\")";
+            output_txt.Text = "Sortie";
+            Button_Start.Content = "Démarrer";
+            Button_Pause.Content = "Pause";
+            Button_Stop.Content = "Arrêter";
 
             lang = LangEnum.FR;
         }
@@ -263,6 +277,10 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Configuration file";
             txt_Config.Text = "Add program that may prevent from saving successfully (without \".exe\" extension)";
+            output_txt.Text = "Sortie :";
+            Button_Start.Content = "Start";
+            Button_Pause.Content = "Pause";
+            Button_Stop.Content = "Stop";
 
             lang = LangEnum.EN;
         }
@@ -281,31 +299,42 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Файл конфигурации";
             txt_Config.Text = "Добавить программы, которые могут вызвать конфликты с резервными копиями (без \".exe\")";
+            output_txt.Text = "Вывод :";
+            Button_Start.Content = "Старт";
+            Button_Pause.Content = "Пауза";
+            Button_Stop.Content = "Стоп";
 
             lang = LangEnum.RU;
         }
 
         private void AR_Click(object sender, RoutedEventArgs e)
         {
-             txt_Create.Text = ":" +"إنشاء نسخة احتياطية";
-             txt_Extensions.Text = ":امتدادات الملفات التي تحتاج إلى تشفيرها";
-             txt_Use.Text = ":" + "استخدم نسخة احتياطية";
-             Button_Create.Content = "إنشاء";
-             Button_Add.Content = "ابدأ";
-             Check_Differential.Content = "تفاضلي) النسخ الاحتياطي الافتراضي هو نسخة احتياطية كاملة)";
-             src_Path.Text = "مسار المصدر";
-             dest_Path.Text = "مسار الوجهة";
-             backup_Name.Text = "اسم النسخة الاحتياطية";
-             button_src.Content = button_dst.Content = "...";
-             button_config.Content = "ملف التكوين";
-             txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
+            txt_Create.Text = ":" +"إنشاء نسخة احتياطية";
+            txt_Extensions.Text = ":امتدادات الملفات التي تحتاج إلى تشفيرها";
+            txt_Use.Text = ":" + "استخدم نسخة احتياطية";
+            Button_Create.Content = "إنشاء";
+            Button_Add.Content = "ابدأ";
+            Check_Differential.Content = "تفاضلي) النسخ الاحتياطي الافتراضي هو نسخة احتياطية كاملة)";
+            src_Path.Text = "مسار المصدر";
+            dest_Path.Text = "مسار الوجهة";
+            backup_Name.Text = "اسم النسخة الاحتياطية";
+            button_src.Content = button_dst.Content = "...";
+            button_config.Content = "ملف التكوين";
+            txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
+            output_txt.Text = ":انتاج |";
+            Button_Start.Content = "ابدأ";
+            Button_Pause.Content = "وقفة";
+            Button_Stop.Content = "توقف";
 
             lang = LangEnum.AR;
         }
 
-        // --------------------------NOT IMPLEMENTED METHODS---------------------------------
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+
+
+    // --------------------------NOT IMPLEMENTED METHODS---------------------------------
+
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
         }

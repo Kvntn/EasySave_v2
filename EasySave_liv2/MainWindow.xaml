@@ -7,7 +7,7 @@
         xmlns:ViewModel="clr-namespace:EasySave.ViewModel" x:Class="EasySave.MainWindow"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Title="EasySave - For your cleanest backups" Height="586" Width="1000" >
+        Title="EasySave - For your cleanest backups" Height="592" Width="1000" >
     <Grid Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" Height="570" VerticalAlignment="Bottom">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="112*"/>
@@ -20,29 +20,29 @@
             <RowDefinition Height="283"/>
         </Grid.RowDefinitions>
 
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="740" Margin="217,-117,0,0" Grid.RowSpan="3" Stroke="Black" VerticalAlignment="Top" Width="889"/>
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="740" Margin="217,-127,0,0" Grid.RowSpan="3" Stroke="Black" VerticalAlignment="Top" Width="889"/>
 
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="350" Margin="-104,1,0,0" Grid.Row="2" Stroke="Black" VerticalAlignment="Top" Width="1344"/>
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="350" Margin="-104,278,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="1344" Grid.RowSpan="2"/>
 
         <StackPanel HorizontalAlignment="Left" Orientation="Vertical" Grid.Row="1" VerticalAlignment="Top" Height="0" Width="0"/>
-        <TextBlock x:Name="txt_Create" HorizontalAlignment="Left" Height="62" Margin="17,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="579" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"><Run Text="Create backup"/><Run Language="fr-fr" Text=" :"/></TextBlock>
-        <TextBox x:Name="input_src" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,114,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="484" AutomationProperties.IsRequiredForForm="True" Grid.ColumnSpan="2" />
-        <TextBox x:Name="input_dst" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="484" AutomationProperties.IsRequiredForForm="True" Grid.ColumnSpan="2" Grid.Row="1" />
-        <TextBox x:Name="input_name" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,157,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="207" AutomationProperties.IsRequiredForForm="True"/>
+        <TextBlock x:Name="txt_Create" HorizontalAlignment="Left" Height="62" Margin="17,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="579" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"><Run Text="Create backup"/><Run Language="fr-fr" Text=" :"/></TextBlock>
+        <TextBox x:Name="input_src" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,104,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="484" AutomationProperties.IsRequiredForForm="True" Grid.ColumnSpan="2" />
+        <TextBox x:Name="input_dst" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="484" AutomationProperties.IsRequiredForForm="True" Grid.ColumnSpan="2" Grid.Row="1" />
+        <TextBox x:Name="input_name" Text="" Grid.Column="1" HorizontalAlignment="Left" Height="18" Margin="145,147,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="207" AutomationProperties.IsRequiredForForm="True"/>
 
-        <TextBlock x:Name="src_Path" Grid.Column="1" HorizontalAlignment="Left" Height="25" Margin="11,116,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontFamily="Verdana" RenderTransformOrigin="0.212,0.542"><Run Language="fr-fr" Text="Source path"/></TextBlock>
-        <TextBlock x:Name="backup_Name" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="10,156,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" FontFamily="Verdana" Grid.Row="1"><Run Language="fr-fr" Text="Backup name"/></TextBlock>
-        <TextBlock x:Name="dest_Path" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="10,136,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontFamily="Verdana" Grid.Row="1"><Run Language="fr-fr" Text="Destination path"/></TextBlock>
+        <TextBlock x:Name="src_Path" Grid.Column="1" HorizontalAlignment="Left" Height="25" Margin="11,106,0,0" Grid.RowSpan="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontFamily="Verdana" RenderTransformOrigin="0.212,0.542"><Run Language="fr-fr" Text="Source path"/></TextBlock>
+        <TextBlock x:Name="backup_Name" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="10,146,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" FontFamily="Verdana" Grid.Row="1"><Run Language="fr-fr" Text="Backup name"/></TextBlock>
+        <TextBlock x:Name="dest_Path" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="11,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontFamily="Verdana" Grid.Row="1"><Run Language="fr-fr" Text="Destination path"/></TextBlock>
 
-        <Button x:Name="Button_Create" Content="Create" Grid.Column="2" Height="22" Margin="0,191,0,0" VerticalAlignment="Top" Click="Button_Creates" Grid.Row="1" HorizontalAlignment="Center" Width="134"/>
-        <CheckBox x:Name="Check_Differential" Content="Differential (Full backup by default)" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="144,192,0,0" VerticalAlignment="Top" Width="418" FontFamily="Verdana" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Button x:Name="Button_Add" Content="Add" Grid.Column="1" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="79" Grid.Row="2" Margin="264,143,0,0" Click="Button_Add_Click"/>
+        <Button x:Name="Button_Create" Content="Create" Grid.Column="2" Height="22" Margin="0,181,0,0" VerticalAlignment="Top" Click="Button_Creates" Grid.Row="1" HorizontalAlignment="Center" Width="134"/>
+        <CheckBox x:Name="Check_Differential" Content="Differential (Full backup by default)" Grid.Column="1" HorizontalAlignment="Left" Height="26" Margin="144,182,0,0" VerticalAlignment="Top" Width="418" FontFamily="Verdana" Grid.Row="1" Grid.ColumnSpan="2"/>
+        <Button x:Name="Button_Add" Content="Add" Grid.Column="1" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="79" Grid.Row="2" Margin="264,133,0,0" Click="Button_Add_Click"/>
 
-        <TextBlock x:Name="txt_Use" HorizontalAlignment="Left" Height="55" TextWrapping="Wrap" VerticalAlignment="Top" Width="751" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="2" Margin="23,5,0,0" Grid.Column="1" Grid.ColumnSpan="2"><Run Language="fr-fr" Text="Use backup :"/></TextBlock>
-        <TextBlock x:Name="txt_Extensions" HorizontalAlignment="Center" Height="75" Margin="0,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" FontFamily="Verdana" FontStyle="Italic" TextAlignment="Center" Grid.Row="2" Text="Extensions to encrypt  Separate them using ';' (.docx;.txt)"/>
-        <TextBlock x:Name="txt_Config" Text="Add program that may prevent from saving successfully" HorizontalAlignment="Left" Height="86" Margin="30,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="158" FontFamily="Verdana" FontStyle="Italic" TextAlignment="Center" Grid.Row="2"><Span FontFamily="Consolas" Foreground="Black" FontSize="12.6666666666667"/></TextBlock>
+        <TextBlock x:Name="txt_Use" HorizontalAlignment="Left" Height="55" TextWrapping="Wrap" VerticalAlignment="Top" Width="751" FontFamily="Verdana" FontSize="36" FontStyle="Italic" Grid.Row="1" Margin="23,282,0,0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2"><Run Language="fr-fr" Text="Use backup :"/></TextBlock>
+        <TextBlock x:Name="txt_Extensions" HorizontalAlignment="Center" Height="75" Margin="0,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="172" FontFamily="Verdana" FontStyle="Italic" TextAlignment="Center" Grid.Row="2" Text="Extensions to encrypt  Separate them using ';' (.docx;.txt)"/>
+        <TextBlock x:Name="txt_Config" Text="Add program that may prevent from saving successfully" HorizontalAlignment="Left" Height="86" Margin="30,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="158" FontFamily="Verdana" FontStyle="Italic" TextAlignment="Center" Grid.Row="2"><Span FontFamily="Consolas" Foreground="Black" FontSize="12.6666666666667"/></TextBlock>
 
-        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontSize="36" FontStyle="Italic" RenderTransformOrigin="0.5,0.5" Margin="0,63,11,0" Grid.Row="1" Height="57" VerticalAlignment="Top" HorizontalAlignment="Right" Width="190">
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontSize="36" FontStyle="Italic" RenderTransformOrigin="0.5,0.5" Margin="0,53,11,0" Grid.Row="1" Height="57" VerticalAlignment="Top" HorizontalAlignment="Right" Width="190">
             <TextBlock.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -52,26 +52,26 @@
                 </TransformGroup>
             </TextBlock.RenderTransform><Run Text="EasySave"/><LineBreak/><Run/></TextBlock>
 
-        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="0,114,0,0" Grid.Row="1" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Width="200"><Run Language="fr-fr" Text="For your cleanest backups."/></TextBlock>
+        <TextBlock TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="0,104,0,0" Grid.Row="1" Height="32" VerticalAlignment="Top" HorizontalAlignment="Right" Width="200"><Run Language="fr-fr" Text="For your cleanest backups."/></TextBlock>
 
-        <Button x:Name="button_dst" Content="..." Grid.Column="2" HorizontalAlignment="Left" Height="18" Margin="110,0,0,0" VerticalAlignment="Center" Width="18" Grid.Row= "1"  Click="Button_Select_Dst"/>
-        <Button x:Name="button_src" Content="..." Grid.Column="2" HorizontalAlignment="Right" Height="18" Margin="0,114,126,0" VerticalAlignment="Top" Width="18" Grid.Row= "1"  Click="Button_Select_Src"/>
+        <Button x:Name="button_dst" Content="..." Grid.Column="2" HorizontalAlignment="Left" Height="18" Margin="111,125,0,0" VerticalAlignment="Top" Width="18" Grid.Row= "1"  Click="Button_Select_Dst"/>
+        <Button x:Name="button_src" Content="..." Grid.Column="2" HorizontalAlignment="Right" Height="18" Margin="0,104,126,0" VerticalAlignment="Top" Width="18" Grid.Row= "1"  Click="Button_Select_Src"/>
 
-        <Button x:Name="button_config" Content="Configuration File" HorizontalAlignment="Left" Height="28" Margin="25,99,0,0" Grid.Row="2" VerticalAlignment="Top" Width="167" Click="Button_Config"/>
-        <TextBlock x:Name="outputCreate" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="168,237,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" />
-        <TextBlock x:Name="label_copyright" TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="29,263,35,-32" Grid.Row="2" FontSize="8"><Run Text="Copyright Kvendev, Lyna2008 (git)"/></TextBlock>
-        <TextBlock x:Name="outputSave" Grid.Column="2" HorizontalAlignment="Left" Height="44" Margin="69,199,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="178" />
-        <ListBox x:Name="listbox_backup"  HorizontalAlignment="Left" Height="184" Margin="31,64,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="ListBox_BackupList" Grid.Column="1" Grid.Row="2" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="{Binding EasySave.MainWindow}"/>
+        <Button x:Name="button_config" Content="Configuration File" HorizontalAlignment="Left" Height="28" Margin="25,89,0,0" Grid.Row="2" VerticalAlignment="Top" Width="167" Click="Button_Config"/>
+        <TextBlock x:Name="outputCreate" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="141,228,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" />
+        <TextBlock x:Name="label_copyright" TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="30,258,34,-27" Grid.Row="2" FontSize="8"><Run Text="Copyright Kvendev, Lyna2008 (git)"/></TextBlock>
+        <TextBlock x:Name="outputSave" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="428,249,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="302" Grid.ColumnSpan="2" />
+        <ListBox x:Name="listbox_backup"  HorizontalAlignment="Left" Height="184" Margin="16,51,0,0" VerticalAlignment="Top" Width="240" SelectionChanged="ListBox_BackupList" Grid.Column="1" Grid.Row="2" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="{Binding EasySave.MainWindow}"/>
 
-        <ComboBox Margin="81,165,95,0" Grid.RowSpan="2" Height="26" VerticalAlignment="Top">
+        <ComboBox Margin="81,155,95,0" Grid.RowSpan="2" Height="26" VerticalAlignment="Top">
             <ComboBoxItem Content="EN" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="EN_Click" Grid.Row="1" IsSelected="True"/>
             <ComboBoxItem Content="FR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="FR_Click" Grid.Row="1"/>
             <ComboBoxItem Content="RU" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="RU_Click" Grid.Row="1"/>
             <ComboBoxItem Content="AR" HorizontalAlignment="Left" Height="26"  VerticalAlignment="Top" Width="51" Selected="AR_Click" Grid.Row="1"/>
         </ComboBox>
-        
-        <Button x:Name="button_server" Content="Start server" HorizontalAlignment="Left" Height="22" Margin="50,244,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="Button_Server"/>
-        <DataGrid Name="dataGrid" ItemsSource="{Binding Backups}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="358,63,99,34" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
+
+        <Button x:Name="button_server" Content="Start server" HorizontalAlignment="Left" Height="22" Margin="50,234,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Click="Button_Server"/>
+        <DataGrid Name="dataGrid" ItemsSource="{Binding Backups}" IsReadOnly="true"  AlternationCount = "2" AutoGenerateColumns = "False" Margin="358,50,99,47" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding taskname}">
@@ -133,9 +133,10 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <Button x:Name="Button_Start" Content="Start" Grid.Column="2" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,116,0,0" Click="Button_Start_Click"/>
-        <Button x:Name="Button_Pause" Content="Pause" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,177,0,0" Click="Button_Pause_Click"/>
-        <Button x:Name="Button_Stop" Content="Stop" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,146,0,0" Click="Button_Stop_Click"/>
+        <Button x:Name="Button_Start" Content="Start" Grid.Column="2" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,106,0,0" Click="Button_Start_Click"/>
+        <Button x:Name="Button_Pause" Content="Pause" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,167,0,0" Click="Button_Pause_Click"/>
+        <Button x:Name="Button_Stop" Content="Stop" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,136,0,0" Click="Button_Stop_Click"/>
+        <TextBlock x:Name="output_txt" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="359,248,0,0" Grid.Row="2" Text="Output :" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" FontFamily="Verdana" FontStyle="Italic" FontWeight="Normal"/>
 
     </Grid>
 </Window>

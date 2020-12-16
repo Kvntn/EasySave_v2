@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
+using EasySave.Model.Remote;
 using EasySave_RemoteClient.src;
 
 namespace EasySave_RemoteClient
@@ -21,13 +21,13 @@ namespace EasySave_RemoteClient
         private LangEnum lang = LangEnum.EN;
         private Backend backend = new Backend();
         private ObservableCollection<string> lstr = new ObservableCollection<string>();
-        private ObservableCollection<string> grid = new ObservableCollection<string>();
+        private ObservableCollection<ClientObjectFormat> grid = new ObservableCollection<ClientObjectFormat>();
 
         public MainWindow()
         {
             InitializeComponent();
 
-            listbox_backup.DataContext = this.backend;
+            listbox_backup.DataContext = this;
             dataGrid.DataContext = this;
 
             listbox_backup.ItemsSource = lstr;
@@ -43,15 +43,19 @@ namespace EasySave_RemoteClient
                 if (lstr.Count > 0)
                     lstr.Clear();
                 backend.StartSocketThread(input_ip.Text, "Data");
-                while(!Backend.receivedData && backend.SocketThreadState == ThreadState.Running);
-                foreach (string str in backend.StrList)
-                    lstr.Add(str);
+                
+                Thread.Sleep(1500);
+                if (backend.StrList.Count > 0)
+                    foreach (string str in backend.StrList)
+                        lstr.Add(str);
+                
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Server not found " + ex.ToString());
             }
         }
+
 
         private void Button_Disconnect(object sender, RoutedEventArgs e)
         {
@@ -84,8 +88,14 @@ namespace EasySave_RemoteClient
             if (listbox_backup.SelectedItems.Count > 0)
             {
                 foreach (string item in listbox_backup.SelectedItems)
-                    grid.Add(item);
-                backend.LoadDataGrid(grid);
+                    foreach (ClientObjectFormat clientObject in backend.cof)
+                        if(clientObject.Name == item)
+                        {
+                            grid.Add(clientObject);
+                            break;
+                        }
+                backend.StartSocketThread(input_ip.Text, "Progress");
+
             }
 
             else
@@ -124,25 +134,6 @@ namespace EasySave_RemoteClient
 
         }
 
-        private void EN_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void FR_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void AR_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void RU_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
 
         
     }

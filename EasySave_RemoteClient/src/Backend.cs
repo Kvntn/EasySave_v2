@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasySave.Model.Remote;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -16,8 +17,12 @@ namespace EasySave_RemoteClient.src
         Socket client;
 
         private ThreadState _socketThreadState;
-        public List<string> _strList = new List<string>();
+        private List<string> _strList = new List<string>();
+        private List<string> _percent = new List<string>();
+        public List<ClientObjectFormat> cof = new List<ClientObjectFormat>();
+
         public static bool receivedData = false;
+
 
         // ManualResetEvent instances signal completion.  
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
@@ -51,19 +56,33 @@ namespace EasySave_RemoteClient.src
             SocketThreadState = CTh.ThreadState;
         }
 
-        internal void LoadDataGrid(IList<string> temp)
+        internal IEnumerable<ClientObjectFormat> LoadDataGrid(IList<ClientObjectFormat> temp, int nbItems)
         {
-           //from listbox to datagrid
+            //from listbox to datagrid
+            return null;
         }
 
         public void ActualizedData()
         {
-            receivedData = false;
-            foreach (string str in incomingData.Split("||"))
-                StrList.Add(str);
+           
+            string names = incomingData.Split("@@")[0];
+            string percent = incomingData.Split("@@")[1];
+
+            string[] array_names = names.Split("||");
+            string[] array_percent = percent.Split("##");
+
+            
+            for (int i = 0; i < array_names.Length; i++)
+            {
+                cof.Add(new ClientObjectFormat(array_names[i], int.Parse(array_percent[i])));
+                StrList.Add(array_names[i]);
+            }
+                
             receivedData = true;
 
         }
+
+
 
 
         //---------------------------SOCKET ASYNC METHODS----------------------------------
@@ -108,7 +127,6 @@ namespace EasySave_RemoteClient.src
                 // Receive the response from the remote device.  
                 Receive(client);
                 receiveDone.WaitOne();
-
 
                 // Release the socket.  
                 client.Shutdown(SocketShutdown.Both);
@@ -173,7 +191,6 @@ namespace EasySave_RemoteClient.src
                 {
                     // There might be more data, so store the data received so far.  
                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-
                     // Get the rest of the data.  
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), state);
@@ -265,6 +282,16 @@ namespace EasySave_RemoteClient.src
             {
                 _strList = value;
                 NotifyPropertyChanged("StrList");
+            }
+        }
+
+        public List<string> Percent
+        {
+            get { return _percent; }
+            set
+            {
+                _percent = value;
+                NotifyPropertyChanged("Percent");
             }
         }
 

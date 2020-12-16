@@ -9,12 +9,15 @@ using System.Threading;
 using EasySave_RemoteClient.src;
 using System.Net.Sockets;
 using MessageBox = System.Windows.MessageBox;
-using System.Threading.Tasks;
 using System.Net;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace EasySave.ViewModel
 {
+    /// <summary>
+    /// Converts value from the Model (Backup) to the View (MainWindow)
+    /// It also helps the socket (now integrated to the View_Model class) interacting
+    /// with the required data for the connected clients.
+    /// </summary>
     public class View_Model : INotifyPropertyChanged
     {
 
@@ -24,24 +27,25 @@ namespace EasySave.ViewModel
         private List<string> _pextensions;
         private List<Newbackup> _backups;
 
+        private List<ClientObjectFormat> _clientObjectFormat;
+
         public static string ListBoxContent = "no data.";
-        internal BinaryFormatter bf = new BinaryFormatter();
+        public static List<string> PercentTest = new List<string>();
         public static string incomingData = "";
 
         public List<string> listBackup = new List<string>();
         public List<Thread> LThreads = new List<Thread>();
 
         // Thread signal.  
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
-         
+        private static ManualResetEvent allDone = new ManualResetEvent(false);
+        private static ManualResetEvent sendDone = new ManualResetEvent(false);
+        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
+
+
         //Server socket thread
-        private Thread STh;
-        //Determines when the socket must end
-        private bool hasEnded = false;
+        public Thread STh;
         //saves incoming string from client
         private string _request;
-    
-
 
 
         public View_Model()
@@ -125,6 +129,7 @@ namespace EasySave.ViewModel
             PExtensions = this.backup.PriorityExtensions;
         }
 
+        //Load DataGrid
         internal void LoadDataGrid(IList<string> lstr)
         {
             List<Newbackup> temp = new List<Newbackup>();
@@ -135,6 +140,7 @@ namespace EasySave.ViewModel
                         if (bu.taskname == str)
                         {
                             temp.Add(bu);
+                            //_clientObjectFormat.Add(new ClientObjectFormat(bu.taskname, 0));
                             break;
                         }
                             
@@ -182,17 +188,24 @@ namespace EasySave.ViewModel
 
         public void StartServer()
         {
-            ListBoxContent = string.Join("||", listBackup);
             STh = new Thread(new ThreadStart(StartListening));
             STh.Name = "Server Socket Thread";
             STh.Start();
        
         }
 
-        public void SetSocketData()
+        private string SetSocketData()
         {
+            Random rx = new Random();
+            for (int i = 0; i < listBackup.Count; i++)
+            {
+                PercentTest.Add(rx.Next(0, 100).ToString());
+            }
+            string percent = string.Join("##", PercentTest);
+            
             ListBoxContent = "";
-            ListBoxContent = string.Join("||", listBackup);
+            ListBoxContent = string.Join("||", listBackup) + "@@" + percent;
+            return ListBoxContent;
         }
     
 
@@ -215,13 +228,15 @@ namespace EasySave.ViewModel
             try
             {
                 listener.Bind(localEndPoint);
-                listener.Listen(1);
+                listener.Listen(1000);
 
                 allDone.Reset();
                 // Start an asynchronous socket to listen for connections.
                 listener.BeginAccept(
                     new AsyncCallback(AcceptCallback),
                     listener);
+
+
             }
             catch (Exception e)
             {
@@ -284,10 +299,7 @@ namespace EasySave.ViewModel
                         switch (content)
                         {
                             case "DataXX":
-                                Send(handler, String.Join("||", listBackup));
-                                break;
-                            case "ProgressXX":
-
+                                Send(handler, SetSocketData());
                                 break;
                             case "closeConnectionXX":
                                 break;
@@ -339,18 +351,10 @@ namespace EasySave.ViewModel
             {
                 // Retrieve the socket from the state object.  
                 Socket handler = (Socket)ar.AsyncState;
-
                 // Complete sending the data to the remote device.  
                 int bytesSent = handler.EndSend(ar);
 
-
-
-                //APRES RENVOI DE DATA JE FAIS QUOI LA ??
-                //BEGINRECEIVE ???
-
-
-
-
+ 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
             }
@@ -411,7 +415,6 @@ namespace EasySave.ViewModel
                 NotifyPropertyChanged("Backups");
             }
         }
-
         public string Request
         {
             get { return _request; }

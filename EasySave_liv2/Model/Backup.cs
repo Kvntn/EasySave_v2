@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic; // used for data types
-using System.ComponentModel;
 using System.Diagnostics; // used to calculate time
 using System.IO; // used to manage files and directories
-using System.Linq;
-using System.Threading;
+using System.Threading; // resource access management
 using Newtonsoft.Json; // used for json
+using System.Linq;
 
 namespace EasySave.Model
 {
+    /// <summary>
+    /// Model of the MVVM app.
+    /// Stores all saving functions and related features.
+    /// It interacts with the data and does all the file I/O job.   
+    ///     => Reads/writes config file
+    ///     / Reads/writes backup list
+    ///     / Writes logs
+    /// </summary>
     class Backup 
     {
 
@@ -257,7 +264,7 @@ namespace EasySave.Model
             DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
 
             // Calculate total folder size
-            foreach (FileInfo fi in diSource.GetFiles("*.*", SearchOption.AllDirectories))
+            foreach (FileInfo fi in OrderFilesByPExtensions(diSource))
             {
                 totalFolderSize += fi.Length;
             }
@@ -448,13 +455,11 @@ namespace EasySave.Model
         //Set file priority before backups
         private FileInfo[] OrderFilesByPExtensions(DirectoryInfo dir)
         {
-            int nbPriority = 0;
-            int nbNormal = 0;
             bool isFirst = false;
 
             FileInfo[] files = dir.GetFiles();
-            FileInfo[] priority = new FileInfo[files.Length];
-            FileInfo[] normal = new FileInfo[files.Length];
+            List<FileInfo> priority = new List<FileInfo>();
+            List<FileInfo> normal = new List<FileInfo>();
             int totalLength = files.Length;
 
             foreach (FileInfo file in files)
@@ -470,28 +475,13 @@ namespace EasySave.Model
                 }
 
                 if (isFirst)
-                {
-                    priority[nbPriority] = file;
-                    nbPriority++;
-                }
+                    priority.Add(file);
                 else
-                {
-                    priority[nbNormal] = file; 
-                    nbNormal++;
-                }  
+                    priority.Add(file); 
             }
-                
 
-            
-            Array.Resize<FileInfo>(ref priority, nbPriority);
-            Array.Resize<FileInfo>(ref normal, nbNormal);
-
-            files = new FileInfo[totalLength];
-            Array.Copy(normal, priority, totalLength);
-            Array.Copy(priority, files, totalLength);
-
-
-            return files;
+            FileInfo[] fix = priority.Concat(normal).ToArray();
+            return fix;
         }
 
 //---------------ENCRYPTION RELATED METHODS------------------------------------
@@ -501,7 +491,7 @@ namespace EasySave.Model
         {
             Stopwatch cryptime = new Stopwatch();
 
-            if (EncryptExt.Count() != 0)
+            if (EncryptExt.Count != 0)
             {
                 foreach (string ext in EncryptExt)
                     if (Path.GetExtension(file.FullName) == ext)
@@ -551,9 +541,7 @@ namespace EasySave.Model
         }
 
 
-
 //-----------------CONFIG RELATED METHODS -----------------------------------
-
 
         //used to load config into variables
         public void CheckConfigRequirements()
@@ -610,6 +598,7 @@ namespace EasySave.Model
 
         }
 
+        //Uses ProgramPreventClose and 
         private bool OnSaveProgramPrevention_all()
         {
             bool isOk = true;
