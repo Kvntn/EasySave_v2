@@ -44,7 +44,7 @@ namespace EasySave_RemoteClient
                     lstr.Clear();
                 backend.StartSocketThread(input_ip.Text, "Data");
                 
-                Thread.Sleep(1500);
+                Thread.Sleep(1000);
                 if (backend.StrList.Count > 0)
                     foreach (string str in backend.StrList)
                         lstr.Add(str);
@@ -94,7 +94,8 @@ namespace EasySave_RemoteClient
                             grid.Add(clientObject);
                             break;
                         }
-                backend.StartSocketThread(input_ip.Text, "Progress");
+
+                backend.StartSocketThread(input_ip.Text, "SendGrid");
 
             }
 
@@ -108,7 +109,7 @@ namespace EasySave_RemoteClient
         }
         private void Button_Start_Click(object sender, RoutedEventArgs e)
         {
-
+            backend.StartSocketThread(input_ip.Text, "StartSave");
         }
 
         private void Button_Pause_Click(object sender, RoutedEventArgs e)

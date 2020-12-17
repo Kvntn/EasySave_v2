@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EasySave.Model.Remote
 {
-    class ClientObjectFormat
+    public class ClientObjectFormat
     {
         private string _name;
         private int _percent;

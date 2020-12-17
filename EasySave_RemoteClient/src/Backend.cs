@@ -21,7 +21,6 @@ namespace EasySave_RemoteClient.src
         private List<string> _percent = new List<string>();
         public List<ClientObjectFormat> cof = new List<ClientObjectFormat>();
 
-        public static bool receivedData = false;
 
 
         // ManualResetEvent instances signal completion.  
@@ -47,7 +46,7 @@ namespace EasySave_RemoteClient.src
 
         public void StartSocketThread(string ipx, string messagex)
         {
-            ip = ipx;
+            ip = ipx;          
             message = messagex;
 
             CTh = new Thread(new ThreadStart(StartClient));
@@ -78,8 +77,6 @@ namespace EasySave_RemoteClient.src
                 StrList.Add(array_names[i]);
             }
                 
-            receivedData = true;
-
         }
 
 
@@ -89,7 +86,30 @@ namespace EasySave_RemoteClient.src
 
         public void StartClient()
         {
-            // Connect to a remote device.  
+            //Add delimiter for split. Acts like a header 
+            //to identify functions to use on server
+            switch (message)
+            {
+                case "Data":
+                    message = "DataXX";
+                    break;
+                case "SendGrid":
+                    message = "SendGridXX";
+                    foreach (ClientObjectFormat item in cof)
+                        message += item.Name + "||";
+                    break;
+                case "StartSave":
+                    message = "StartSaveXX";
+                    
+                    break;
+                case "closeConnection":
+                    message = "closeConnectionXX";
+                    break;
+                default:
+                    MessageBox.Show("Incorrect socket message.");
+                    break;
+                }
+            
             try
             {
                 // Establish the remote endpoint for the socket.  
@@ -99,22 +119,6 @@ namespace EasySave_RemoteClient.src
 
                 // Create a TCP/IP socket.  
                 client = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-                switch (message)
-                {
-                    case "Data":
-                        message = "DataXX";
-                        break;
-                    case "Progress":
-                        message = "ProgressXX";
-                        break;
-                    case "closeConnection":
-                        message = "closeConnectionXX";
-                        break;
-                    default:
-                        MessageBox.Show("Error");
-                        break;
-                }
 
                 // Connect to the remote endpoint.  
                 client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
@@ -128,9 +132,7 @@ namespace EasySave_RemoteClient.src
                 Receive(client);
                 receiveDone.WaitOne();
 
-                // Release the socket.  
-                client.Shutdown(SocketShutdown.Both);
-                client.Close();
+                
             }
             catch (Exception e)
             {
@@ -207,7 +209,12 @@ namespace EasySave_RemoteClient.src
                     {
                         ActualizedData();
                     }
-                        
+
+                    //MessageBox.Show("close soon");
+                    // Release the socket.  
+                    client.Shutdown(SocketShutdown.Both);
+                    client.Close();
+
                     // Signal that all bytes have been received.  
                     receiveDone.Set();
                 }

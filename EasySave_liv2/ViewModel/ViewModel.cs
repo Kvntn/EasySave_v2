@@ -10,6 +10,7 @@ using EasySave_RemoteClient.src;
 using System.Net.Sockets;
 using MessageBox = System.Windows.MessageBox;
 using System.Net;
+using System.Collections.ObjectModel;
 
 namespace EasySave.ViewModel
 {
@@ -25,7 +26,7 @@ namespace EasySave.ViewModel
         private List<string> _programs;
         private List<string> _extensions;
         private List<string> _pextensions;
-        private List<Newbackup> _backups;
+        private ObservableCollection<Newbackup> _backups;
 
         private List<ClientObjectFormat> _clientObjectFormat;
 
@@ -46,6 +47,11 @@ namespace EasySave.ViewModel
         public Thread STh;
         //saves incoming string from client
         private string _request;
+
+        //Mutex for grid list access 
+        //Prevents from server and client to add to grid at the same time
+        //One will be overwritten.
+        public static Mutex mutexGrid = new Mutex();
 
 
         public View_Model()
@@ -82,8 +88,8 @@ namespace EasySave.ViewModel
         //Find backup object from string
         public void FindBackupByName(string str)
         {
-            if (backup.BackupsList.Count > 0)
-                foreach(Newbackup bu in backup.BackupsList)
+            if (Backups.Count > 0)
+                foreach(Newbackup bu in Backups)
                     if (bu.taskname == str)
                         if (bu.backupType == 1)
                         {
@@ -129,10 +135,11 @@ namespace EasySave.ViewModel
             PExtensions = this.backup.PriorityExtensions;
         }
 
-        //Load DataGrid
+        //Load MainWindow DataGrid
         internal void LoadDataGrid(IList<string> lstr)
         {
-            List<Newbackup> temp = new List<Newbackup>();
+            mutexGrid.WaitOne();
+            ObservableCollection<Newbackup> temp = new ObservableCollection<Newbackup>();
 
             if (backup.BackupsList.Count > 0)
                 foreach (string str in lstr)
@@ -143,9 +150,9 @@ namespace EasySave.ViewModel
                             //_clientObjectFormat.Add(new ClientObjectFormat(bu.taskname, 0));
                             break;
                         }
-                            
             Backups = temp;
-                        
+            NotifyPropertyChanged("Backups");
+            mutexGrid.ReleaseMutex();
         }
 
 //----------------------------------PATH INPUT CHECK-------------------------------
@@ -207,7 +214,34 @@ namespace EasySave.ViewModel
             ListBoxContent = string.Join("||", listBackup) + "@@" + percent;
             return ListBoxContent;
         }
-    
+
+        public void SocketDataToGrid(string result)
+        {
+            //parse string from socket "AddDataXXsaveName1||saveName2||etc"
+            //returns an array of names.
+            string[] array = result.Split("XX")[1].Split("||");
+
+            List<string> list = new List<string>();
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                MessageBox.Show(array[i]);
+                list.Add(array[i]);
+            }
+            
+            LoadDataGrid(list);
+        }
+
+        public void SocketStartSave()
+        {
+            if (Backups.Count > 0)
+                foreach(Newbackup bu in Backups)
+                    FindBackupByName(bu.taskname);
+
+            MessageBox.Show("Client's requested saves were done. For further informations" +
+                "Please consult the logfile", "Successful save from client");
+        }
+
 
 //-----------------------------SOCKET COMMUNICATION-----------------------------------
 
@@ -227,14 +261,19 @@ namespace EasySave.ViewModel
             // Bind the socket to the local endpoint and listen for incoming connections.  
             try
             {
-                listener.Bind(localEndPoint);
-                listener.Listen(1000);
+                while (true)
+                {
+                    listener.Bind(localEndPoint);
+                    listener.Listen(1000);
+                    
+                    // Start an asynchronous socket to listen for connections.
+                    listener.BeginAccept(
+                        new AsyncCallback(AcceptCallback),
+                        listener);
 
-                allDone.Reset();
-                // Start an asynchronous socket to listen for connections.
-                listener.BeginAccept(
-                    new AsyncCallback(AcceptCallback),
-                    listener);
+                    
+                }
+               
 
 
             }
@@ -301,6 +340,12 @@ namespace EasySave.ViewModel
                             case "DataXX":
                                 Send(handler, SetSocketData());
                                 break;
+                            case "StartSaveXX":
+                                SocketStartSave();
+                                break;
+                            case "SendGridXX":
+                                SocketDataToGrid(content);
+                                break;
                             case "closeConnectionXX":
                                 break;
                             default:
@@ -315,6 +360,7 @@ namespace EasySave.ViewModel
                         new AsyncCallback(ReadCallback), state);
                     }
                    
+
                     //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     //new AsyncCallback(ReadCallback), state);
 
@@ -406,7 +452,7 @@ namespace EasySave.ViewModel
                 NotifyPropertyChanged("PEextensions");
             }
         }
-        public List<Newbackup> Backups
+        public ObservableCollection<Newbackup> Backups
         {
             get { return _backups; }
             set
@@ -423,6 +469,8 @@ namespace EasySave.ViewModel
                 _request = value; 
             }
         }
+
+        public bool ReveivedGridList { get; private set; }
 
         // Property Change Logic  
         public event PropertyChangedEventHandler PropertyChanged;

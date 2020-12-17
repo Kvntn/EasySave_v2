@@ -14,6 +14,8 @@ using EasySave.ViewModel;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ThreadState = System.Threading.ThreadState;
 using MessageBox = System.Windows.MessageBox;
+using System.Windows.Documents;
+using System.Drawing;
 
 namespace EasySave
 {
@@ -46,7 +48,7 @@ namespace EasySave
                 listbox_backup.Items.Add(str);
             }
 
-            //this.EN_Start();
+            this.EN_Start();
             
         }
 
@@ -85,6 +87,7 @@ namespace EasySave
            
         }
 
+        //Launches saves
         private void Button_Start_Click(object sender, RoutedEventArgs e)
         {
 
@@ -114,11 +117,9 @@ namespace EasySave
                 else if (lang == LangEnum.AR)
                     outputSave.Text = "يتداخل البرنامج مع النسخ الاحتياطي";
             }
-                
-
-            
         }
 
+        //Starts server (socket)
         private void Button_Server(object sender, RoutedEventArgs e)
         {
             if(vm.STh == null)
@@ -251,6 +252,7 @@ namespace EasySave
             button_config.Content = "Fichier de configuration";
             txt_Config.Text = "Ajoutez les programmes pouvant causer des conflits avec les sauvegardes (sans \".exe\")";
             output_txt.Text = "Sortie";
+            //output_txt_Copy.Text.Remove(0);
             Button_Start.Content = "Démarrer";
             Button_Pause.Content = "Pause";
             Button_Stop.Content = "Arrêter";
@@ -277,7 +279,8 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Configuration file";
             txt_Config.Text = "Add program that may prevent from saving successfully (without \".exe\" extension)";
-            //output_txt.Text = "Sortie :";
+            output_txt.Text = "Output :";
+            //output_txt_Copy.Text.Remove(0);
             Button_Start.Content = "Start";
             Button_Pause.Content = "Pause";
             Button_Stop.Content = "Stop";
@@ -299,7 +302,8 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "Файл конфигурации";
             txt_Config.Text = "Добавить программы, которые могут вызвать конфликты с резервными копиями (без \".exe\")";
-            //output_txt.Text = "Вывод :";
+            output_txt.Text = "Вывод :";
+            //output_txt_Copy.Text.Remove(0);
             Button_Start.Content = "Старт";
             Button_Pause.Content = "Пауза";
             Button_Stop.Content = "Стоп";
@@ -321,7 +325,9 @@ namespace EasySave
             button_src.Content = button_dst.Content = "...";
             button_config.Content = "ملف التكوين";
             txt_Config.Text = "أضف برنامجًا قد يمنع الحفظ بنجاح";
-            //output_txt.Text = ":انتاج |";
+            //output_txt_Copy.Text = ":انتاج |";
+            output_txt.Text = ":انتاج |";
+            //output_txt.Text.Remove(0);
             Button_Start.Content = "ابدأ";
             Button_Pause.Content = "وقفة";
             Button_Stop.Content = "توقف";

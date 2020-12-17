@@ -60,12 +60,14 @@
         <Button x:Name="Button_Start" Content="Start" Grid.Column="2" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,106,0,0" Click="Button_Start_Click"/>
         <Button x:Name="Button_Pause" Content="Pause" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,167,0,0" Click="Button_Pause_Click"/>
         <Button x:Name="Button_Stop" Content="Stop" Grid.Column="2" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="76" Grid.Row="2" Margin="173,136,0,0" Click="Button_Stop_Click"/>
-        <TextBlock x:Name="output_txt" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="359,248,0,0" Grid.Row="2" Text="Output :" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" FontFamily="Verdana" FontStyle="Italic" FontWeight="Normal"/>
-
+        <TextBlock x:Name="output_txt" Grid.Column="1" HorizontalAlignment="Left" Height="22" Margin="359,248,0,0" Grid.Row="2" Text="Output :" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" FontFamily="Verdana" FontStyle="Italic" FontWeight="Normal"/>
+<!--
+        <TextBlock x:Name="output_txt_AR" Grid.Column="2" HorizontalAlignment="Left" Height="22" Margin="129,248,0,0" Grid.Row="2" Text="x" TextWrapping="Wrap" VerticalAlignment="Top" Width="77" FontFamily="Verdana" FontStyle="Italic" FontWeight="Normal"/>
+-->
         <Button x:Name="button_config" Content="Configuration File" HorizontalAlignment="Left" Height="28" Margin="25,89,0,0" Grid.Row="2" VerticalAlignment="Top" Width="167" Click="Button_Config"/>
         <TextBlock x:Name="outputCreate" Grid.Column="1" HorizontalAlignment="Left" Height="29" Margin="141,228,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" />
         <TextBlock x:Name="label_copyright" TextWrapping="Wrap" FontFamily="Verdana" FontStyle="Italic" Margin="30,258,34,-27" Grid.Row="2" FontSize="8"><Run Text="Copyright Kvendev, Lyna2008 (git)"/></TextBlock>
-        <TextBlock x:Name="outputSave" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="428,249,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="302" Grid.ColumnSpan="2" />
+        <TextBlock x:Name="outputSave" Grid.Column="1" HorizontalAlignment="Left" Height="28" Margin="420,249,0,0" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" Width="215" Grid.ColumnSpan="2" />
         <ListBox x:Name="listbox_backup"  HorizontalAlignment="Left" Height="184" Margin="16,51,0,0" VerticalAlignment="Top" Width="240" SelectionChanged="ListBox_BackupList" Grid.Column="1" Grid.Row="2" SelectionMode="Multiple" Background="{x:Null}" IsSynchronizedWithCurrentItem="False" DataContext="{Binding EasySave.MainWindow}"/>
 
         <ComboBox Margin="81,155,95,0" Grid.RowSpan="2" Height="26" VerticalAlignment="Top">
